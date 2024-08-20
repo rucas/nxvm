@@ -12,7 +12,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.ACTIONS_TOKEN }}
         fetch-depth: 1
 
     - name: Install Nix
@@ -26,9 +26,9 @@ jobs:
       with:
         pr-title: ':package:(flake): bump'
         commit-msg: ':package:(flake): bump'
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.ACTIONS_TOKEN }}
 
     - name: Merge Changes
       run: gh pr merge ${{ steps.update.outputs.pull-request-number }} --squash --delete-branch
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
