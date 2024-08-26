@@ -31,6 +31,10 @@
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    precognition = {
+      url = "github:tris203/precognition.nvim";
+      flake = false;
+    };
   };
   outputs = { nixpkgs, nixvim, flake-parts, pre-commit-hooks, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
@@ -46,6 +50,7 @@
               package =
                 inputs.neovim-nightly-overlay.packages.${system}.default;
             };
+            extraSpecialArgs = { inherit inputs; };
           };
         in {
 

@@ -349,13 +349,30 @@
         "type": "github"
       }
     },
+    "precognition": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1723573354,
+        "narHash": "sha256-w+GniyMlA2AAumuACNlEkJLYxNU1W5XLww37yyRJ0PQ=",
+        "owner": "tris203",
+        "repo": "precognition.nvim",
+        "rev": "8a81c310b4e76b4884fc5350a5741cf683c645c7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tris203",
+        "repo": "precognition.nvim",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "flake-parts": "flake-parts",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
-        "pre-commit-hooks": "pre-commit-hooks"
+        "pre-commit-hooks": "pre-commit-hooks",
+        "precognition": "precognition"
       }
     },
     "systems": {

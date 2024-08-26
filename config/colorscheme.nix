@@ -23,17 +23,40 @@ in {
         # NOTE:
         # https://github.com/nvim-telescope/telescope.nvim/blob/master/plugin/telescope.lua
         TelescopeNormal = {
-          fg = colors.base04;
-          bg = colors.base01;
+          fg = colors.base05;
+          bg = colors.background;
         };
-        TelescopeBorder = {
+        TelescopeResultsNormal = {
+          fg = colors.base05;
+          bg = colors.base00;
+        };
+        TelescopeResultsBorder = {
+          fg = colors.base00;
+          bg = colors.base00;
+        };
+        TelescopeResultsTitle = {
+          fg = colors.base00;
+          bg = colors.base00;
+        };
+        TelescopePreviewNormal = {
           fg = colors.base01;
           bg = colors.base01;
         };
-
+        TelescopePreviewBorder = {
+          fg = colors.base01;
+          bg = colors.base01;
+        };
+        TelescopePreviewTitle = {
+          fg = colors.base01;
+          bg = colors.base01;
+        };
+        TelescopeBorder = {
+          fg = colors.background;
+          bg = colors.background;
+        };
         # -- Telescope Prompt: this is where you type in Telescope
         TelescopePromptNormal = {
-          fg = colors.base04;
+          fg = colors.base05;
           bg = colors.base02;
         };
         TelescopePromptBorder = {
@@ -48,26 +71,18 @@ in {
           fg = colors.base03;
           bg = colors.base02;
         };
-
-        TelescopePreviewBorder = {
-          fg = colors.base01;
-          bg = colors.base01;
-        };
-        TelescopeResultsBorder = {
-          fg = colors.base01;
-          bg = colors.base01;
-        };
-
         TelescopeSelection = {
           bg = colors.faded_blue;
           bold = true;
         };
+        TelescopeMatching = { fg = colors.base08; };
 
-        TelescopeMatching = {
-          fg = colors.base08;
-          bg = colors.base01;
+        # more subtle line numbers
+        LineNr = { fg = colors.base02; };
+        SignColumn = {
+          fg = colors.base03;
+          bg = colors.background;
         };
-
       };
     };
   };

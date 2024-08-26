@@ -97,9 +97,10 @@
         fold = " ";
       };
 
+      timeoutlen = 500;
+      updatetime = 2000;
+
       #
-      # vim.opt.timeoutlen = 500
-      # vim.opt.updatetime = 200
       #
       # -- Autocomplete
       # vim.opt.completeopt = "menu,menuone,noselect"
