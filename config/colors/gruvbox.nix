@@ -16,8 +16,6 @@ _: {
   base0E = "#d3869b";
   base0F = "#d65d0e";
 
-  # base05 = "#c0b196";
-
   background = "#282828";
   dark4 = "#7c6f64";
   faded_blue = "#3e5751";
