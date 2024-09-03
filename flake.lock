@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "btw": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1712766747,
+        "narHash": "sha256-91DZUfa4FBvXnkcNHdllr82Dr1Ie+MGVD3ibwkqo04c=",
+        "owner": "letieu",
+        "repo": "btw.nvim",
+        "rev": "47f6419e90d3383987fd06e8f3e06a4bc032ac83",
+        "type": "github"
+      },
+      "original": {
+        "owner": "letieu",
+        "repo": "btw.nvim",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -367,6 +383,7 @@
     },
     "root": {
       "inputs": {
+        "btw": "btw",
         "flake-parts": "flake-parts",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs",

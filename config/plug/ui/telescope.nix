@@ -40,35 +40,5 @@
         };
       };
     };
-    keymaps = {
-      "<leader>/" = {
-        action = "live_grep";
-        options = { desc = "Grep (root dir)"; };
-      };
-      "<leader>:" = {
-        action = "command_history";
-        options = { desc = "Command History"; };
-      };
-      "<leader>ff" = {
-        action = "find_files";
-        options = { desc = "Project files"; };
-      };
-      "<leader>fg" = {
-        action = "git_files";
-        options = { desc = "Git files"; };
-      };
-      "<leader>fR" = {
-        action = "resume";
-        options = { desc = "Resume"; };
-      };
-      "<leader>fo" = {
-        action = "oldfiles";
-        options = { desc = "Recent"; };
-      };
-      "<leader>fb" = {
-        action = "buffers";
-        options = { desc = "Buffers"; };
-      };
-    };
   };
 }

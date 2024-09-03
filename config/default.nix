@@ -9,9 +9,12 @@
     ./plug/git/gitsigns.nix
     ./plug/treesitter/treesitter-context.nix
     ./plug/treesitter/treesitter.nix
+    ./plug/ui/btw.nix
     ./plug/ui/indent-blankline.nix
+    ./plug/ui/neo-tree.nix
     ./plug/ui/telescope.nix
     ./plug/ui/todo-comments.nix
+    ./plug/ui/toggleterm.nix
     ./plug/utils/autosave.nix
     ./plug/utils/betterescape.nix
     ./plug/utils/colorizer.nix

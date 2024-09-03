@@ -1,2 +1,3 @@
 # nxvm
-A Neovim Nix Flake
+
+> A Neovim Nix Flake

@@ -3,15 +3,120 @@
   keymaps = [
     {
       mode = "n";
+      key = "<leader>:";
+      action = "<cmd>Telescope command_history<cr>";
+      options = { desc = "command history"; };
+    }
+
+    {
+      mode = "n";
+      key = "<leader>/";
+      action = "<cmd>Telescope live_grep<cr>";
+      options = { desc = "grep"; };
+    }
+
+    {
+      mode = "n";
+      key = "<leader>e";
+      action = "+explore";
+    }
+
+    {
+      mode = "n";
+      key = "<leader>et";
+      action = "<cmd>Neotree toggle<cr>";
+      options = { desc = "Toggle Neotree"; };
+    }
+
+    {
+      mode = "n";
+      key = "<leader>eu";
+      action = "<cmd>UndotreeToggle<cr>";
+      options = { desc = "Toggle Undotree"; };
+    }
+    {
+      mode = "n";
       key = "<leader>f";
       action = "+find/file";
     }
 
     {
       mode = "n";
-      key = "<leader>s";
-      action = "+search";
+      key = "<leader>fb";
+      action = "<cmd>Telescope buffers<cr>";
+      options = { desc = "Buffers"; };
     }
+
+    {
+      mode = "n";
+      key = "<leader>ff";
+      action = "<cmd>Telescope find_files<cr>";
+      options = { desc = "Project Files"; };
+    }
+
+    {
+      mode = "n";
+      key = "<leader>fg";
+      action = "<cmd>Telescope git_files<cr>";
+      options = { desc = "Git Files"; };
+    }
+
+    {
+      mode = "n";
+      key = "<leader>fo";
+      action = "<cmd>Telescope oldfiles<cr>";
+      options = { desc = "Recent"; };
+    }
+
+    {
+      mode = "n";
+      key = "<leader>fR";
+      action = "<cmd>Telescope resume<cr>";
+      options = { desc = "Resume"; };
+    }
+
+    #{
+    #  mode = "n";
+    #  key = "<leader>d";
+    #  action = "+debug";
+    #}
+
+    {
+      mode = "n";
+      key = "<leader>g";
+      action = "+git";
+    }
+
+    {
+      mode = [ "n" "v" ];
+      key = "<leader>gy";
+      action = "";
+      options = { desc = "Yank Git Line"; };
+    }
+
+    {
+      mode = "n";
+      key = "<leader>gY";
+      action = "<cmd>lua require('gitlinker').get_repo_url()<cr>";
+      options = { desc = "Yank Git URL"; };
+    }
+
+    {
+      mode = "n";
+      key = "<leader>gO";
+      action =
+        "<cmd>lua require('gitlinker').get_repo_url({action_callback = require('gitlinker.actions').open_in_browser})<cr>";
+      options = {
+        desc = "Open Git URL";
+        silent = true;
+      };
+    }
+
+    #{
+    #  mode = "n";
+    #  key = "<leader>s";
+    #  action = "+search";
+    #}
 
     {
       mode = "n";
@@ -32,12 +137,6 @@
     }
 
     #{
-    #  mode = "n";
-    #  key = "<leader>d";
-    #  action = "+debug";
-    #}
-
-    #{
     #  mode = [ "n" "v" ];
     #  key = "<leader>c";
     #  action = "+code";
@@ -56,19 +155,19 @@
     }
 
     # Copy stuff to system clipboard with <leader> + y or just y to have it just in vim
-    {
-      mode = [ "n" "v" ];
-      key = "<leader>y";
-      action = ''"+y'';
-      options = { desc = "Copy to system clipboard"; };
-    }
+    #{
+    #  mode = [ "n" "v" ];
+    #  key = "<leader>y";
+    #  action = ''"+y'';
+    #  options = { desc = "Copy to system clipboard"; };
+    #}
 
-    {
-      mode = [ "n" "v" ];
-      key = "<leader>Y";
-      action = ''"+Y'';
-      options = { desc = "Copy to system clipboard"; };
-    }
+    #{
+    #  mode = [ "n" "v" ];
+    #  key = "<leader>Y";
+    #  action = ''"+Y'';
+    #  options = { desc = "Copy to system clipboard"; };
+    #}
 
     # Windows
     {

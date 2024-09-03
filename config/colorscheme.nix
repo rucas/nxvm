@@ -20,6 +20,15 @@ in {
       };
       terminal_colors = true;
       overrides = {
+
+        NormalFloat = {
+          fg = colors.base04;
+          bg = colors.background;
+        };
+
+        NeoTreeTitleBar = { bg = colors.base05; };
+        NeoTreeFilterTerm = { fg = colors.base08; };
+
         # NOTE:
         # https://github.com/nvim-telescope/telescope.nvim/blob/master/plugin/telescope.lua
         TelescopeNormal = {
@@ -81,6 +90,16 @@ in {
         LineNr = { fg = colors.base02; };
         SignColumn = {
           fg = colors.base03;
+          bg = colors.background;
+        };
+
+        WhichKeyBorder = {
+          fg = colors.base05;
+          bg = colors.background;
+        };
+
+        WhichKeyNormal = {
+          fg = colors.base05;
           bg = colors.background;
         };
       };

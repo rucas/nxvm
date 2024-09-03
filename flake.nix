@@ -35,6 +35,10 @@
       url = "github:tris203/precognition.nvim";
       flake = false;
     };
+    btw = {
+      url = "github:letieu/btw.nvim";
+      flake = false;
+    };
   };
   outputs = { nixpkgs, nixvim, flake-parts, pre-commit-hooks, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
