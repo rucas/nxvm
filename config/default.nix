@@ -7,6 +7,7 @@
     ./ftplugin.nix
     ./plug/git/gitlinker.nix
     ./plug/git/gitsigns.nix
+    ./plug/lsp/lsp.nix
     ./plug/treesitter/treesitter-context.nix
     ./plug/treesitter/treesitter.nix
     ./plug/ui/btw.nix
@@ -15,6 +16,7 @@
     ./plug/ui/telescope.nix
     ./plug/ui/todo-comments.nix
     ./plug/ui/toggleterm.nix
+    ./plug/ui/web-devicons.nix
     ./plug/utils/autosave.nix
     ./plug/utils/betterescape.nix
     ./plug/utils/colorizer.nix

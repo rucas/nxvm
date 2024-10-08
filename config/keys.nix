@@ -84,7 +84,7 @@
     {
       mode = "n";
       key = "<leader>g";
-      action = "+git";
+      action = "+git/goto";
     }
 
     {
