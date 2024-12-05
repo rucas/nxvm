@@ -21,6 +21,7 @@
     ./plug/utils/betterescape.nix
     ./plug/utils/colorizer.nix
     ./plug/utils/hardtime.nix
+    ./plug/utils/markview.nix
     ./plug/utils/precognition.nix
     ./plug/utils/undotree.nix
     ./plug/utils/whichkey.nix
