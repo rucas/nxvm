@@ -100,6 +100,9 @@
       timeoutlen = 500;
       updatetime = 2000;
 
+      # no shada
+      shada = "";
+
       #
       #
       # -- Autocomplete
