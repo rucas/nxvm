@@ -13,6 +13,7 @@
     ./plug/ui/btw.nix
     ./plug/ui/indent-blankline.nix
     ./plug/ui/neo-tree.nix
+    ./plug/ui/smart-splits.nix
     ./plug/ui/telescope.nix
     ./plug/ui/todo-comments.nix
     ./plug/ui/toggleterm.nix
