@@ -8,6 +8,7 @@
     ./plug/git/gitlinker.nix
     ./plug/git/gitsigns.nix
     ./plug/lsp/lsp.nix
+    ./plug/lsp/trouble.nix
     ./plug/treesitter/treesitter-context.nix
     ./plug/treesitter/treesitter.nix
     ./plug/ui/btw.nix
