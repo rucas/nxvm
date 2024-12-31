@@ -94,24 +94,6 @@
       options = { desc = "Yank Git Line"; };
     }
 
-    {
-      mode = "n";
-      key = "<leader>gY";
-      action = "<cmd>lua require('gitlinker').get_repo_url()<cr>";
-      options = { desc = "Yank Git URL"; };
-    }
-
-    {
-      mode = "n";
-      key = "<leader>gO";
-      action =
-        "<cmd>lua require('gitlinker').get_repo_url({action_callback = require('gitlinker.actions').open_in_browser})<cr>";
-      options = {
-        desc = "Open Git URL";
-        silent = true;
-      };
-    }
-
     #{
     #  mode = "n";
     #  key = "<leader>s";
