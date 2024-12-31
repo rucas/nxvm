@@ -1,12 +1,14 @@
 { lib, ... }: {
   imports = [
     ./autocmds.nix
+    ./cmds.nix
     ./colorscheme.nix
     ./keys.nix
     ./opts.nix
     ./ftplugin.nix
     ./plug/git/gitlinker.nix
     ./plug/git/gitsigns.nix
+    ./plug/lsp/conform.nix
     ./plug/lsp/lsp.nix
     ./plug/lsp/trouble.nix
     ./plug/treesitter/treesitter-context.nix
