@@ -15,6 +15,7 @@
     ./plug/treesitter/treesitter.nix
     ./plug/ui/btw.nix
     ./plug/ui/indent-blankline.nix
+    ./plug/ui/lualine.nix
     ./plug/ui/neo-tree.nix
     ./plug/ui/smart-splits.nix
     ./plug/ui/telescope.nix

@@ -1,3 +1,8 @@
 # nxvm
 
-> A Neovim Nix Flake
+> A _Neovim_ Nix Flake
+
+## Install
+
+
+## List of Plugins
