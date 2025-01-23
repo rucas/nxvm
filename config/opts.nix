@@ -95,7 +95,18 @@
       fillchars = {
         eob = " ";
         fold = " ";
+        foldopen = "";
+        foldsep = " ";
+        foldclose = "";
       };
+      foldmethod = "expr";
+      foldexpr = "v:lua.vim.treesitter.foldexpr()";
+      foldtext = "";
+      foldcolumn = "0";
+      foldlevel = 99;
+      foldlevelstart = 1;
+      foldnestmax = 4;
+      foldenable = true;
 
       timeoutlen = 500;
       updatetime = 2000;
