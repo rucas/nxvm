@@ -105,7 +105,6 @@
       foldcolumn = "0";
       foldlevel = 99;
       foldlevelstart = 1;
-      foldnestmax = 4;
       foldenable = true;
 
       timeoutlen = 500;
