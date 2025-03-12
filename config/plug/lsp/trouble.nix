@@ -9,21 +9,27 @@
     }
     {
       mode = "n";
-      key = "<leader>xL";
-      action = "<CMD>Trouble loclist toggle<CR>";
-      options = { desc = "Trouble loclist toggle"; };
-    }
-    {
-      mode = "n";
       key = "<leader>cs";
       action = "<CMD>Trouble symbols focus=false<CR>";
       options = { desc = "Trouble symbols toggle"; };
     }
     {
       mode = "n";
+      key = "<leader>cl";
+      action = "<CMD>Trouble lsp toggle focus=false win.position=right<CR>";
+      options = { desc = "LSP Definitions / references / ... (Trouble)"; };
+    }
+    {
+      mode = "n";
       key = "<leader>xx";
       action = "<CMD>Trouble diagnostics toggle<CR>";
       options = { desc = "Trouble diagnostics toggle"; };
+    }
+    {
+      mode = "n";
+      key = "<leader>xX";
+      action = "<CMD>Trouble diagnostics toggle filter.buf=0<CR>";
+      options = { desc = "Trouble diagnostics toggle (Buffer)"; };
     }
     {
       mode = "n";

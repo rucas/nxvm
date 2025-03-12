@@ -127,6 +127,8 @@
       #
       # -- NOTE: needs checktime autocommand still...idk why
       # vim.opt.autoread = true
+
+      signcolumn = "auto:4";
     };
   };
 }

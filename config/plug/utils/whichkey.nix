@@ -27,6 +27,15 @@
           };
         }
         {
+          __unkeyed-1 = "<leader>c";
+          mode = "n";
+          group = "+Symbols (LSP)";
+          icon = {
+            color = "red";
+            icon = " ";
+          };
+        }
+        {
           __unkeyed-1 = "<leader>e";
           mode = "n";
           group = "+explore";
@@ -80,7 +89,15 @@
             icon = "󰓩 ";
           };
         }
-
+        {
+          __unkeyed-1 = "<leader>x";
+          mode = "n";
+          group = "+diagnostics";
+          icon = {
+            color = "orange";
+            icon = " ";
+          };
+        }
       ];
       preset = "helix";
       layout = {

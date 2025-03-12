@@ -8,6 +8,7 @@
     ./ftplugin.nix
     ./plug/git/gitlinker.nix
     ./plug/git/gitsigns.nix
+    ./plug/lsp/blink.nix
     ./plug/lsp/conform.nix
     ./plug/lsp/lsp.nix
     ./plug/lsp/trouble.nix
@@ -15,7 +16,7 @@
     ./plug/treesitter/treesitter.nix
     ./plug/ui/btw.nix
     ./plug/ui/indent-blankline.nix
-    ./plug/ui/lualine.nix
+    # ./plug/ui/lualine.nix
     ./plug/ui/neo-tree.nix
     ./plug/ui/smart-splits.nix
     ./plug/ui/telescope.nix
