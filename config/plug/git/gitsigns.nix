@@ -2,7 +2,7 @@
   plugins.gitsigns = {
     enable = true;
     settings = {
-      sign_priority=100;
+      sign_priority = 100;
       signs = {
         add = { text = "┃"; };
         change = { text = "┃"; };
