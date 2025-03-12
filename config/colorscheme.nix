@@ -102,6 +102,24 @@ in {
           fg = colors.base05;
           bg = colors.background;
         };
+
+        # NOTE: no background for cleaner icons in status column
+        DiagnosticSignInfo = {
+          bg = "NONE";
+          fg = colors.base0D;
+        };
+        DiagnosticSignHint = {
+          bg = "NONE";
+          fg = colors.base0A;
+        };
+        DiagnosticSignWarn = {
+          bg = "NONE";
+          fg = colors.base09;
+        };
+        DiagnosticSignError = {
+          bg = "NONE";
+          fg = colors.base08;
+        };
       };
     };
   };
