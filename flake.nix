@@ -7,13 +7,6 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-parts.follows = "flake-parts";
-        devshell.follows = "";
-        flake-compat.follows = "";
-        git-hooks.follows = "";
-        # NOTE: will I need this later?
-        home-manager.follows = "";
-        nix-darwin.follows = "";
-        treefmt-nix.follows = "";
       };
     };
     neovim-nightly-overlay = {
