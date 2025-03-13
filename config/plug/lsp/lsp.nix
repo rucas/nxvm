@@ -10,6 +10,7 @@
         nixd = { enable = true; };
         marksman = { enable = true; };
         pyright = { enable = true; };
+        sqls = { enable = true; };
         ts_ls = { enable = true; };
         typos_lsp = { enable = true; };
         yamlls = { enable = true; };
