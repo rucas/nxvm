@@ -70,7 +70,7 @@
   diagnostics = {
     severity_sort = true;
     virtual_text = false;
-    virtual_lines = true;
+    virtual_lines = false;
     signs = {
       text = helpers.toRawKeys {
         "vim.diagnostic.severity.ERROR" = "󰅙";
