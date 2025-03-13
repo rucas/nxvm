@@ -12,6 +12,7 @@
     ./plug/lsp/conform.nix
     ./plug/lsp/lsp.nix
     ./plug/lsp/trouble.nix
+    ./plug/qol/snacks.nix
     ./plug/treesitter/treesitter-context.nix
     ./plug/treesitter/treesitter.nix
     ./plug/ui/btw.nix
