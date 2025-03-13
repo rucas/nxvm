@@ -3,18 +3,51 @@
     lsp = {
       enable = true;
       inlayHints = true;
+      onAttach = ''
+        vim.api.nvim_create_autocmd("CursorHold", {
+          buffer = bufnr,
+          callback = function()
+            local opts = {
+              focusable = false,
+              close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+              border = 'rounded',
+              source = 'always',
+              prefix = ' ',
+              scope = 'cursor',
+            }
+            vim.diagnostic.open_float(nil, opts)
+          end
+        })
+      '';
       servers = {
+        bashls = { enable = true; };
+        cssls = { enable = true; };
         html = { enable = true; };
+        jsonls = { enable = true; };
         lua_ls = { enable = true; };
+        marksman = { enable = true; };
         nil_ls = { enable = true; };
         nixd = { enable = true; };
-        marksman = { enable = true; };
         pyright = { enable = true; };
         sqls = { enable = true; };
+        terraformls = { enable = true; };
         ts_ls = { enable = true; };
         typos_lsp = { enable = true; };
         yamlls = { enable = true; };
       };
+      postConfig = ''
+        local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+        function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+          local width = math.floor(vim.o.columns * 0.8)
+          local height = math.floor(vim.o.lines * 0.3)
+          opts = {
+            border = 'rounded',
+            max_width = width,
+            max_height = height,
+          }
+          return orig_util_open_floating_preview(contents, syntax, opts, ...)
+        end
+      '';
       keymaps = {
         silent = true;
         lspBuf = {
@@ -52,10 +85,6 @@
           };
         };
         diagnostic = {
-          # "<leader>cd" = {
-          #   action = "open_float";
-          #   desc = "Line Diagnostics";
-          # };
           "[d" = {
             action = "goto_next";
             desc = "Next Diagnostic";

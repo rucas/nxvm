@@ -111,7 +111,7 @@
       timeoutlen = 10;
 
       # Decrease updatetime
-      updatetime = 50; # faster completion (4000ms default)
+      updatetime = 250; # faster completion (4000ms default)
 
       # Set completeopt to have a better completion exper
       # mostly just for cmpience
