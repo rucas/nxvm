@@ -2,7 +2,7 @@
   plugins.better-escape = { enable = true; };
   extraConfigLua = ''
     require("better_escape").setup({
-      timeout = vim.o.timeoutlen,
+      timeout = 2000,
       default_mappings = false,
       mappings = {
         i = {

@@ -107,8 +107,15 @@
       foldlevelstart = 1;
       foldenable = true;
 
-      timeoutlen = 500;
-      updatetime = 2000;
+      # Reduce which-key timeout to 10ms
+      timeoutlen = 10;
+
+      # Decrease updatetime
+      updatetime = 50; # faster completion (4000ms default)
+
+      # Set completeopt to have a better completion exper
+      # mostly just for cmpience
+      completeopt = [ "menuone" "noselect" "noinsert" ];
 
       # no shada
       shada = "";
@@ -123,12 +130,11 @@
       #
       # vim.opt.splitkeep = "screen"
       #
-      # vim.opt.conceallevel = 2
       #
       # -- NOTE: needs checktime autocommand still...idk why
       # vim.opt.autoread = true
 
-      signcolumn = "auto:4";
+      signcolumn = "auto:2";
     };
   };
 }
