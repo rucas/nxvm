@@ -22,6 +22,7 @@
         htmlangular = [ "prettierd" ];
         htmldjango = [ "djlint" ];
         lua = [ "stylua" ];
+        markdown = [ "injected" ];
         nix = [ "nixfmt" ];
         python = [ "isort" "black" ];
         sh = [ "shellcheck" ];
