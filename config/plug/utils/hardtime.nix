@@ -3,7 +3,7 @@
     enable = true;
     settings = {
       enabled = true;
-      disable_mouse = true;
+      disable_mouse = false;
       hint = true;
       max_count = 4;
       max_time = 1000;
