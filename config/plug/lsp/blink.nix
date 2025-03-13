@@ -138,6 +138,7 @@
           documentation = {
             auto_show = true;
             window = { border = "single"; };
+            treesitter_highlighting = true;
           };
           accept = { auto_brackets = { enabled = false; }; };
         };
