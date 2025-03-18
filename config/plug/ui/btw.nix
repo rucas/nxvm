@@ -1,11 +1,6 @@
 { pkgs, inputs, ... }: {
-  extraPlugins = with pkgs.vimUtils;
-    [
-      (buildVimPlugin {
-        name = "btw.nvim";
-        src = inputs.btw;
-      })
-    ];
+  extraPlugins =
+    [ (pkgs.callPackage ../../../pkgs/btw.nix { inherit inputs; }) ];
 
   extraConfigLua = ''
     require('btw').setup({
