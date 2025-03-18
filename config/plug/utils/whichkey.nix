@@ -29,7 +29,7 @@
         {
           __unkeyed-1 = "<leader>c";
           mode = "n";
-          group = "+Symbols (LSP)";
+          group = "+code [LSP]";
           icon = {
             color = "red";
             icon = " ";

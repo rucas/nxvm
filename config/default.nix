@@ -12,11 +12,11 @@
     ./plug/lsp/conform.nix
     ./plug/lsp/lsp.nix
     ./plug/lsp/trouble.nix
+    ./plug/qol/friendly-snippets.nix
     ./plug/qol/snacks.nix
     ./plug/treesitter/treesitter-context.nix
     ./plug/treesitter/treesitter.nix
     ./plug/ui/btw.nix
-    ./plug/ui/indent-blankline.nix
     ./plug/ui/lualine.nix
     ./plug/ui/neo-tree.nix
     ./plug/ui/quicker.nix

@@ -77,11 +77,15 @@
           };
           "<leader>cw" = {
             action = "workspace_symbol";
-            desc = "Workspace Symbol";
+            desc = "Query Workspace Symbol";
           };
           "<leader>cr" = {
             action = "rename";
             desc = "Rename";
+          };
+          "<leader>ca" = {
+            action = "code_action";
+            desc = "Code Actions";
           };
         };
         diagnostic = {
