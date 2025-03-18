@@ -120,6 +120,10 @@ in {
           bg = "NONE";
           fg = colors.base08;
         };
+        Folded = {
+          bg = colors.base01;
+          fg = colors.base08;
+        };
       };
     };
   };

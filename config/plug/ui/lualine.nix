@@ -25,21 +25,52 @@ in {
       sections = {
         lualine_a = [{
           __unkeyed = treeWidth;
-          color = {
-            fg = colors.base04;
-            bg = "nil";
-          };
+          color = { bg = colors.background; };
           padding = {
             left = 0;
             right = 0;
           };
           separator.left = "";
-          separator.right = "";
+          separator.right = "│";
         }];
         lualine_b = [{
           __unkeyed_1 = "mode";
-          separator.left = "";
-          separator.right = "";
+          fmt = helpers.mkRaw ''
+            function(str)
+              return " " .. string.sub(str, 1, 3)
+            end
+          '';
+          color = helpers.mkRaw ''
+            function()
+              local mode_color = {
+                  n = '${colors.base08}',
+                  i = '${colors.base0B}',
+                  v = '${colors.base0D}',
+                  [""] = '${colors.base0D}',
+                  V = '${colors.base0D}',
+                  c = '${colors.base0F}',
+                  no = '${colors.base08}',
+                  s = '${colors.base09}',
+                  S = '${colors.base09}',
+                  [""] = '${colors.base09}',
+                  ic = '${colors.base0A}',
+                  R = '${colors.base0E}',
+                  Rv = '${colors.base0E}',
+                  cv = '${colors.base08}',
+                  ce = '${colors.base08}',
+                  r = '${colors.base0C}',
+                  rm = '${colors.base0C}',
+                  ["r?"] = '${colors.base0C}',
+                  ["!"] = '${colors.base08}',
+                  t = '${colors.base0E}',
+              }
+              return { fg = mode_color[vim.fn.mode()] }
+            end
+          '';
+          separator = {
+            left = "";
+            right = "";
+          };
         }];
         lualine_c = [
           {
