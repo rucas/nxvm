@@ -1,11 +1,6 @@
 { pkgs, inputs, ... }: {
-  extraPlugins = with pkgs.vimUtils;
-    [
-      (buildVimPlugin {
-        name = "precognition.nvim";
-        src = inputs.precognition;
-      })
-    ];
+  extraPlugins =
+    [ (pkgs.callPackage ../../../pkgs/precognition.nix { inherit inputs; }) ];
   extraConfigLua = ''
     require('precognition').setup({
       highlightColor = { link = "SignColumn" },
