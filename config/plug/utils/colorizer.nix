@@ -1,1 +1,11 @@
-{ plugins.colorizer = { enable = true; }; }
+{
+  plugins.colorizer = {
+    enable = true;
+    settings = {
+      filetypes = {
+        css = { rgb_fn = true; };
+        html = { names = false; };
+      };
+    };
+  };
+}
