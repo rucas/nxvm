@@ -1,7 +1,7 @@
 { config, pkgs, ... }: {
   extraPlugins = with pkgs.vimPlugins; [ blink-cmp-copilot blink-ripgrep-nvim ];
 
-  extraPackages = with pkgs; [ gh ];
+  extraPackages = with pkgs; [ gh wordnet ];
 
   plugins = {
     blink-cmp-copilot.enable = !config.plugins.blink-copilot.enable;
