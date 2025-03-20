@@ -120,21 +120,21 @@
       # no shada
       shada = "";
 
-      #
-      #
-      # -- Autocomplete
-      # vim.opt.completeopt = "menu,menuone,noselect"
-      #
+      splitkeep = "screen";
+
       # -- Sessions
       # vim.opt.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-      #
-      # vim.opt.splitkeep = "screen"
       #
       #
       # -- NOTE: needs checktime autocommand still...idk why
       # vim.opt.autoread = true
 
+      # NOTE: is this needed for snacks statuscol?
       signcolumn = "auto:2";
+
+      spell = true;
+      spellfile = "/Users/lucas/.config/nvim/spell/en.utf-8.add";
+      spelllang = "en";
     };
   };
 }
