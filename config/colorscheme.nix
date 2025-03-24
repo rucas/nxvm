@@ -18,6 +18,7 @@ in {
         blue = "#7daea3";
         faded_blue = "#3e5751";
       };
+      inverse = false;
       terminal_colors = true;
       overrides = {
 
@@ -25,9 +26,6 @@ in {
           fg = colors.base04;
           bg = colors.background;
         };
-
-        NeoTreeTitleBar = { bg = colors.base05; };
-        NeoTreeFilterTerm = { fg = colors.base08; };
 
         # NOTE:
         # https://github.com/nvim-telescope/telescope.nvim/blob/master/plugin/telescope.lua
@@ -124,6 +122,11 @@ in {
           bg = colors.base01;
           fg = colors.base08;
         };
+
+        NeoTreeTitleBar = { bg = colors.base05; };
+        NeoTreeFilterTerm = { fg = colors.base08; };
+        NeoTreeNormal = { bg = colors.base01; };
+        NeoTreeNormalNC = { bg = colors.base01; };
       };
     };
   };

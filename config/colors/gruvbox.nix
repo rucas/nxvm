@@ -19,6 +19,8 @@ _: {
   background = "#282828";
   dark4 = "#7c6f64";
   faded_blue = "#3e5751";
+  faded_green = "#545b32";
+
 
   bg00 = "#1b1b1b";
   bg01 = "#282828";

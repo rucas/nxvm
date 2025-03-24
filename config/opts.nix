@@ -135,6 +135,8 @@
       spell = true;
       spellfile = "/Users/lucas/.config/nvim/spell/en.utf-8.add";
       spelllang = "en";
+
+      cursorline = true;
     };
   };
 }
