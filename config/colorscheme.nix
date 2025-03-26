@@ -127,6 +127,15 @@ in {
         NeoTreeFilterTerm = { fg = colors.base08; };
         NeoTreeNormal = { bg = colors.base01; };
         NeoTreeNormalNC = { bg = colors.base01; };
+        NeoTreeWinSeparator = {
+          bg = "NONE";
+          fg = colors.base01;
+        };
+
+        WinSeparator = {
+          bg = "NONE";
+          fg = colors.base01;
+        };
       };
     };
   };

@@ -98,6 +98,7 @@
         foldopen = "";
         foldsep = " ";
         foldclose = "";
+        vert = "▏";
       };
       foldmethod = "expr";
       foldexpr = "v:lua.vim.treesitter.foldexpr()";
