@@ -243,7 +243,7 @@ in {
               __unkeyed_1 = "mode";
               fmt = helpers.mkRaw ''
                 function(str)
-                  return " " .. "TERM"
+                  return " " .. string.sub(str, 1, 4)
                 end
               '';
               color = helpers.mkRaw ''
