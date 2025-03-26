@@ -9,12 +9,20 @@
     prettierd
     shellcheck
     stylua
+    sqruff
     taplo
     yamlfmt
   ];
   plugins.conform-nvim = {
     enable = true;
     settings = {
+      formatters = {
+        sqruff = {
+          command = "sqruff";
+          args = [ "fix" "--force" "$FILENAME" ];
+          stdin = false;
+        };
+      };
       formatters_by_ft = {
         javascript = [ "prettierd" "prettier" ];
         json = [ "jq" ];
@@ -26,6 +34,7 @@
         nix = [ "nixfmt" ];
         python = [ "isort" "black" ];
         sh = [ "shellcheck" ];
+        sql = [ "sqruff" ];
         toml = [ "taplo" ];
         typescript = [ "prettierd" "prettier" ];
         typescriptreact = [ "prettierd" "prettier" ];
