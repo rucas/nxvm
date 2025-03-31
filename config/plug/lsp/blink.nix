@@ -1,5 +1,7 @@
-{ config, pkgs, ... }: {
-  extraPlugins = with pkgs.vimPlugins; [ blink-cmp-copilot blink-ripgrep-nvim ];
+{ config, lib, pkgs, ... }: {
+  extraPlugins = with pkgs.vimPlugins;
+    [ blink-ripgrep-nvim ]
+    ++ lib.optionals config.plugins.blink-copilot.enable [ blink-cmp-copilot ];
 
   extraPackages = with pkgs; [ gh wordnet ];
 
@@ -25,7 +27,7 @@
             "lsp"
             "path"
             "snippets"
-            "copilot"
+            (lib.mkIf config.plugins.blink-copilot.enable "copilot")
             "dictionary"
             "emoji"
             "git"
@@ -48,12 +50,6 @@
               module = "blink-emoji";
               score_offset = 1;
             };
-            copilot = {
-              name = "copilot";
-              module = "blink-copilot";
-              async = true;
-              score_offset = 100;
-            };
             lsp = { score_offset = 4; };
             spell = {
               name = "Spell";
@@ -68,6 +64,13 @@
                 commit = { };
                 git_centers = { git_hub = { }; };
               };
+            };
+          } // lib.optionalAttrs config.plugins.blink-copilot.enable {
+            copilot = {
+              name = "copilot";
+              module = "blink-copilot";
+              async = true;
+              score_offset = 100;
             };
           };
         };
