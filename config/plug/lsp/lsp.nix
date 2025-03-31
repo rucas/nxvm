@@ -1,5 +1,6 @@
 { helpers, ... }: {
   plugins = {
+    schemastore = { enable = true; };
     lsp = {
       enable = true;
       inlayHints = true;
@@ -23,7 +24,17 @@
         bashls = { enable = true; };
         cssls = { enable = true; };
         html = { enable = true; };
-        jsonls = { enable = true; };
+        jsonls = {
+          enable = true;
+          extraOptions = {
+            settings = {
+              json = {
+                schemas.__raw = "require('schemastore').json.schemas()";
+                validate = { enable = true; };
+              };
+            };
+          };
+        };
         lua_ls = { enable = true; };
         marksman = { enable = true; };
         nil_ls = { enable = true; };

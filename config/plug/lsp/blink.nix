@@ -4,10 +4,10 @@
   extraPackages = with pkgs; [ gh wordnet ];
 
   plugins = {
-    blink-cmp-copilot.enable = !config.plugins.blink-copilot.enable;
+    blink-cmp-copilot.enable = false;
     blink-cmp-dictionary.enable = true;
     blink-cmp-spell.enable = true;
-    blink-copilot.enable = true;
+    blink-copilot.enable = false;
     blink-cmp-git.enable = true;
     blink-emoji.enable = true;
     blink-ripgrep.enable = true;
