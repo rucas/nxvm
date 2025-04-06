@@ -44,6 +44,16 @@
               name = "Dict";
               module = "blink-cmp-dictionary";
               min_keyword_length = 3;
+              opts = {
+                dictionary_files.__raw = ''
+                  function()
+                      if vim.bo.filetype == 'markdown' then
+                          return { vim.fn.expand('~/.local/share/dict/words') }
+                      end
+                      return nil
+                  end
+                '';
+              };
             };
             emoji = {
               name = "Emoji";
