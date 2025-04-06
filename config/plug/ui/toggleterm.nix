@@ -1,4 +1,4 @@
-{
+{ lib, config, ... }: {
   plugins.toggleterm = {
     enable = true;
     settings = {
@@ -21,4 +21,32 @@
       '';
     };
   };
+  userCommands = lib.mkIf config.plugins.toggleterm.enable {
+    "GitUI" = {
+      command.__raw = ''
+        function()
+          local Terminal = require("toggleterm.terminal").Terminal
+          local gitui = Terminal:new({
+              cmd = "gitui",
+              dir = "git_dir",
+              direction = "float",
+              float_opts = {
+                  width = 175,
+                  height = 40,
+              },
+              on_open = function(_) end,
+              hidden = true,
+          })
+          gitui:toggle()
+        end
+      '';
+      nargs = 0;
+    };
+  };
+  keymaps = lib.mkIf config.plugins.toggleterm.enable [{
+    mode = [ "n" ];
+    key = "<leader>Tg";
+    action = "<cmd>GitUI<cr>";
+    options = { desc = "GitUI"; };
+  }];
 }

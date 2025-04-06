@@ -72,6 +72,15 @@
           };
         }
         {
+          __unkeyed-1 = "<leader>T";
+          mode = "n";
+          group = "+terminals";
+          icon = {
+            color = "purple";
+            icon = " ";
+          };
+        }
+        {
           __unkeyed-1 = "<leader>w";
           mode = "n";
           group = "+windows";
@@ -95,7 +104,7 @@
           group = "+diagnostics";
           icon = {
             color = "orange";
-            icon = " ";
+            icon = "  ";
           };
         }
       ];
