@@ -258,5 +258,36 @@
       };
     }
 
+    # Terminal
+    {
+      mode = "t";
+      key = "<esc>";
+      action = "<C-\\><C-n>";
+      options = { silent = true; };
+    }
+    {
+      mode = "t";
+      key = "<C-h>";
+      action = "<cmd>wincmd h<cr>";
+      options = { silent = true; };
+    }
+    {
+      mode = "t";
+      key = "<C-j>";
+      action = "<cmd>wincmd j<cr>";
+      options = { silent = true; };
+    }
+    {
+      mode = "t";
+      key = "<C-k>";
+      action = "<cmd>wincmd k<cr>";
+      options = { silent = true; };
+    }
+    {
+      mode = "t";
+      key = "<C-l>";
+      action = "<cmd>wincmd l<CR>";
+      options = { silent = true; };
+    }
   ];
 }
