@@ -113,7 +113,7 @@
       };
     };
   };
-  diagnostics = {
+  diagnostic.config = {
     severity_sort = true;
     virtual_text = false;
     virtual_lines = false;

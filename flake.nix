@@ -60,7 +60,7 @@
               src = ./.;
               hooks = {
                 statix.enable = true;
-                nixfmt.enable = true;
+                nixfmt-classic.enable = true;
               };
             };
           };
