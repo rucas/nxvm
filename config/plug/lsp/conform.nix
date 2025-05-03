@@ -11,6 +11,7 @@
     stylua
     sqruff
     taplo
+    typstyle
     yamlfmt
   ];
   plugins.conform-nvim = {
@@ -38,6 +39,7 @@
         toml = [ "taplo" ];
         typescript = [ "prettierd" "prettier" ];
         typescriptreact = [ "prettierd" "prettier" ];
+        typst = [ "typstyle" ];
         yaml = [ "yamlfmt" ];
         "*" = [ "trim_whitespace" ];
       };

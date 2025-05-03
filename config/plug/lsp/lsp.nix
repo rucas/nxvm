@@ -42,6 +42,7 @@
         pyright = { enable = true; };
         sqls = { enable = true; };
         terraformls = { enable = true; };
+        tinymist = { enable = true; };
         ts_ls = { enable = true; };
         typos_lsp = { enable = true; };
         yamlls = { enable = true; };
