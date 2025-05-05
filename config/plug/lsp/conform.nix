@@ -57,7 +57,7 @@
               ["end"] = { args.line2, end_line:len() },
             }
           end
-          require("conform").format({ async = true, lsp_format = "fallback", range = range })
+          require("conform").format({ async = true, lsp_fallback = "always", range = range })
         end
       '';
       nargs = "*";
