@@ -32,6 +32,10 @@
       url = "github:letieu/btw.nvim";
       flake = false;
     };
+    gitlinker = {
+      url = "github:linrongbin16/gitlinker.nvim";
+      flake = false;
+    };
   };
   outputs = { nixvim, flake-parts, pre-commit-hooks, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {

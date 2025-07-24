@@ -189,6 +189,22 @@
         "type": "github"
       }
     },
+    "gitlinker": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1741049669,
+        "narHash": "sha256-EO9Ol/TQ2b5x9uVtZ2sNgPdU5pMAwx+PWPd37dt9488=",
+        "owner": "linrongbin16",
+        "repo": "gitlinker.nvim",
+        "rev": "23982c86f50a9c3f4bc531d41b7a4a68ddd12355",
+        "type": "github"
+      },
+      "original": {
+        "owner": "linrongbin16",
+        "repo": "gitlinker.nvim",
+        "type": "github"
+      }
+    },
     "hercules-ci-effects": {
       "inputs": {
         "flake-parts": "flake-parts_2",
@@ -389,6 +405,7 @@
       "inputs": {
         "btw": "btw",
         "flake-parts": "flake-parts",
+        "gitlinker": "gitlinker",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",

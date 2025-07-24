@@ -87,13 +87,6 @@
       action = "+git/goto";
     }
 
-    {
-      mode = [ "n" "v" ];
-      key = "<leader>gy";
-      action = "";
-      options = { desc = "Yank Git Line"; };
-    }
-
     #{
     #  mode = "n";
     #  key = "<leader>s";
