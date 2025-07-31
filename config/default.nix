@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ lib, ... }:
+{
   imports = [
     ./autocmds.nix
     ./cmds.nix
@@ -42,5 +43,8 @@
     };
   };
 
-  config = { theme = "gruvbox"; };
+  config = {
+    theme = "gruvbox";
+    globals.mapleader = " ";
+  };
 }

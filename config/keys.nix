@@ -1,18 +1,21 @@
 {
-  globals.mapleader = " ";
   keymaps = [
     {
       mode = "n";
       key = "<leader>:";
       action = "<cmd>Telescope command_history<cr>";
-      options = { desc = "command history"; };
+      options = {
+        desc = "command history";
+      };
     }
 
     {
       mode = "n";
       key = "<leader>/";
       action = "<cmd>Telescope live_grep<cr>";
-      options = { desc = "grep"; };
+      options = {
+        desc = "grep";
+      };
     }
 
     {
@@ -25,14 +28,18 @@
       mode = "n";
       key = "<leader>et";
       action = "<cmd>Neotree toggle<cr>";
-      options = { desc = "Toggle Neotree"; };
+      options = {
+        desc = "Toggle Neotree";
+      };
     }
 
     {
       mode = "n";
       key = "<leader>eu";
       action = "<cmd>UndotreeToggle<cr>";
-      options = { desc = "Toggle Undotree"; };
+      options = {
+        desc = "Toggle Undotree";
+      };
     }
     {
       mode = "n";
@@ -44,35 +51,45 @@
       mode = "n";
       key = "<leader>fb";
       action = "<cmd>Telescope buffers<cr>";
-      options = { desc = "Buffers"; };
+      options = {
+        desc = "Buffers";
+      };
     }
 
     {
       mode = "n";
       key = "<leader>ff";
       action = "<cmd>Telescope find_files<cr>";
-      options = { desc = "Project Files"; };
+      options = {
+        desc = "Project Files";
+      };
     }
 
     {
       mode = "n";
       key = "<leader>fg";
       action = "<cmd>Telescope git_files<cr>";
-      options = { desc = "Git Files"; };
+      options = {
+        desc = "Git Files";
+      };
     }
 
     {
       mode = "n";
       key = "<leader>fo";
       action = "<cmd>Telescope oldfiles<cr>";
-      options = { desc = "Recent"; };
+      options = {
+        desc = "Recent";
+      };
     }
 
     {
       mode = "n";
       key = "<leader>fR";
       action = "<cmd>Telescope resume<cr>";
-      options = { desc = "Resume"; };
+      options = {
+        desc = "Resume";
+      };
     }
 
     #{
@@ -130,12 +147,17 @@
     }
 
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>YY";
       action = ''
         "+Y
       '';
-      options = { desc = "Copy to system clipboard"; };
+      options = {
+        desc = "Copy to system clipboard";
+      };
     }
 
     # Windows
@@ -256,31 +278,41 @@
       mode = "t";
       key = "<esc>";
       action = "<C-\\><C-n>";
-      options = { silent = true; };
+      options = {
+        silent = true;
+      };
     }
     {
       mode = "t";
       key = "<C-h>";
       action = "<cmd>wincmd h<cr>";
-      options = { silent = true; };
+      options = {
+        silent = true;
+      };
     }
     {
       mode = "t";
       key = "<C-j>";
       action = "<cmd>wincmd j<cr>";
-      options = { silent = true; };
+      options = {
+        silent = true;
+      };
     }
     {
       mode = "t";
       key = "<C-k>";
       action = "<cmd>wincmd k<cr>";
-      options = { silent = true; };
+      options = {
+        silent = true;
+      };
     }
     {
       mode = "t";
       key = "<C-l>";
       action = "<cmd>wincmd l<CR>";
-      options = { silent = true; };
+      options = {
+        silent = true;
+      };
     }
   ];
 }
