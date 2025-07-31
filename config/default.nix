@@ -13,6 +13,7 @@
     ./plug/lsp/conform.nix
     ./plug/lsp/lsp.nix
     ./plug/lsp/trouble.nix
+    ./plug/qol/codecompanion.nix
     ./plug/qol/friendly-snippets.nix
     ./plug/qol/snacks.nix
     ./plug/treesitter/treesitter-context.nix
