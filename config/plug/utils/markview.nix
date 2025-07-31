@@ -1,1 +1,5 @@
-{ plugins.markview = { enable = true; }; }
+{
+  plugins.markview = {
+    enable = true;
+  };
+}

@@ -1,12 +1,15 @@
-{ pkgs, inputs, ... }: {
-  extraPlugins =
-    [ (pkgs.callPackage ../../../pkgs/gitlinker.nix { inherit inputs; }) ];
+{ pkgs, inputs, ... }:
+{
+  extraPlugins = [ (pkgs.callPackage ../../../pkgs/gitlinker.nix { inherit inputs; }) ];
   extraConfigLua = ''
     require('gitlinker').setup()
   '';
   keymaps = [
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>gl";
       action = "<cmd>GitLink<cr>";
       options = {
@@ -16,7 +19,10 @@
       };
     }
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>gL";
       action.__raw = ''
         function()
@@ -30,7 +36,10 @@
       };
     }
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>gb";
       action.__raw = ''
         function()
@@ -44,7 +53,10 @@
       };
     }
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>gB";
       action.__raw = ''
         function()
@@ -61,7 +73,10 @@
       };
     }
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>gd";
       action.__raw = ''
         function()
@@ -75,7 +90,10 @@
       };
     }
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>gD";
       action.__raw = ''
         function()
@@ -92,7 +110,10 @@
       };
     }
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>gc";
       action.__raw = ''
         function()
@@ -106,7 +127,10 @@
       };
     }
     {
-      mode = [ "n" "v" ];
+      mode = [
+        "n"
+        "v"
+      ];
       key = "<leader>gC";
       action.__raw = ''
         function()

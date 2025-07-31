@@ -37,23 +37,39 @@
       flake = false;
     };
   };
-  outputs = { nixvim, flake-parts, pre-commit-hooks, ... }@inputs:
+  outputs =
+    {
+      nixvim,
+      flake-parts,
+      pre-commit-hooks,
+      ...
+    }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      systems =
-        [ "aarch64-linux" "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
-      perSystem = { system, pkgs, self', ... }:
+      systems = [
+        "aarch64-linux"
+        "x86_64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
+      perSystem =
+        {
+          system,
+          pkgs,
+          self',
+          ...
+        }:
         let
           nixvim' = nixvim.legacyPackages.${system};
           nvim = nixvim'.makeNixvimWithModule {
             inherit pkgs;
             module = {
               imports = [ ./config ];
-              package =
-                inputs.neovim-nightly-overlay.packages.${system}.default;
+              package = inputs.neovim-nightly-overlay.packages.${system}.default;
             };
             extraSpecialArgs = { inherit inputs; };
           };
-        in {
+        in
+        {
 
           checks = {
             default = nixvim.lib.${system}.check.mkTestDerivationFromNvim {
@@ -61,21 +77,23 @@
               name = "A Nix Neovim Flake...";
             };
             pre-commit-check = pre-commit-hooks.lib.${system}.run {
-              src = ./.;
+              src = builtins.path {
+                path = ./.;
+                name = "source";
+              };
               hooks = {
                 statix.enable = true;
-                nixfmt-classic.enable = true;
+                nixfmt-rfc-style.enable = true;
               };
             };
           };
 
-          formatter = pkgs.nixfmt;
+          formatter = pkgs.nixfmt-rfc-style;
 
           packages.default = nvim;
 
           devShells = {
-            default = with pkgs;
-              mkShell { inherit (self'.checks.pre-commit-check) shellHook; };
+            default = with pkgs; mkShell { inherit (self'.checks.pre-commit-check) shellHook; };
           };
         };
     };

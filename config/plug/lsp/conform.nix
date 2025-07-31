@@ -1,4 +1,10 @@
-{ lib, config, pkgs, ... }: {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
   extraPackages = with pkgs; [
     black
     isort
@@ -20,25 +26,44 @@
       formatters = {
         sqruff = {
           command = "sqruff";
-          args = [ "fix" "--force" "$FILENAME" ];
+          args = [
+            "fix"
+            "--force"
+            "$FILENAME"
+          ];
           stdin = false;
         };
       };
       formatters_by_ft = {
-        javascript = [ "prettierd" "prettier" ];
+        javascript = [
+          "prettierd"
+          "prettier"
+        ];
         json = [ "jq" ];
-        html = [ "prettierd" "prettier" ];
+        html = [
+          "prettierd"
+          "prettier"
+        ];
         htmlangular = [ "prettierd" ];
         htmldjango = [ "djlint" ];
         lua = [ "stylua" ];
         markdown = [ "injected" ];
         nix = [ "nixfmt" ];
-        python = [ "isort" "black" ];
+        python = [
+          "isort"
+          "black"
+        ];
         sh = [ "shellcheck" ];
         sql = [ "sqruff" ];
         toml = [ "taplo" ];
-        typescript = [ "prettierd" "prettier" ];
-        typescriptreact = [ "prettierd" "prettier" ];
+        typescript = [
+          "prettierd"
+          "prettier"
+        ];
+        typescriptreact = [
+          "prettierd"
+          "prettier"
+        ];
         typst = [ "typstyle" ];
         yaml = [ "yamlfmt" ];
         "*" = [ "trim_whitespace" ];
@@ -64,10 +89,17 @@
       range = true;
     };
   };
-  keymaps = lib.mkIf config.plugins.conform-nvim.enable [{
-    mode = [ "n" "v" ];
-    key = "<leader>F";
-    action = "<cmd>Format<cr>";
-    options = { desc = "Format"; };
-  }];
+  keymaps = lib.mkIf config.plugins.conform-nvim.enable [
+    {
+      mode = [
+        "n"
+        "v"
+      ];
+      key = "<leader>F";
+      action = "<cmd>Format<cr>";
+      options = {
+        desc = "Format";
+      };
+    }
+  ];
 }

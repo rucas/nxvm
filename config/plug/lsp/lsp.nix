@@ -1,6 +1,9 @@
-{ helpers, ... }: {
+{ helpers, ... }:
+{
   plugins = {
-    schemastore = { enable = true; };
+    schemastore = {
+      enable = true;
+    };
     lsp = {
       enable = true;
       inlayHints = true;
@@ -21,34 +24,70 @@
         })
       '';
       servers = {
-        bashls = { enable = true; };
-        cssls = { enable = true; };
-        gopls = { enable = true; };
-        html = { enable = true; };
+        bashls = {
+          enable = true;
+        };
+        cssls = {
+          enable = true;
+        };
+        gopls = {
+          enable = true;
+        };
+        html = {
+          enable = true;
+        };
         jsonls = {
           enable = true;
           extraOptions = {
             settings = {
               json = {
                 schemas.__raw = "require('schemastore').json.schemas()";
-                validate = { enable = true; };
+                validate = {
+                  enable = true;
+                };
               };
             };
           };
         };
-        kotlin_language_server = { enable = true; };
-        lua_ls = { enable = true; };
-        marksman = { enable = true; };
-        nil_ls = { enable = true; };
-        nixd = { enable = true; };
-        pyright = { enable = true; };
-        sqls = { enable = true; };
-        taplo = { enable = true; };
-        terraformls = { enable = true; };
-        tinymist = { enable = true; };
-        ts_ls = { enable = true; };
-        typos_lsp = { enable = true; };
-        yamlls = { enable = true; };
+        kotlin_language_server = {
+          enable = true;
+        };
+        lua_ls = {
+          enable = true;
+        };
+        marksman = {
+          enable = true;
+        };
+        nil_ls = {
+          enable = true;
+        };
+        nixd = {
+          enable = true;
+        };
+        pyright = {
+          enable = true;
+        };
+        sqls = {
+          enable = true;
+        };
+        taplo = {
+          enable = true;
+        };
+        terraformls = {
+          enable = true;
+        };
+        tinymist = {
+          enable = true;
+        };
+        ts_ls = {
+          enable = true;
+        };
+        typos_lsp = {
+          enable = true;
+        };
+        yamlls = {
+          enable = true;
+        };
       };
       postConfig = ''
         local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
@@ -129,17 +168,21 @@
       };
     };
   };
-  keymaps = [{
-    mode = "n";
-    key = "<leader>xL";
-    action.__raw = ''
-      function()
-        local new_config = not vim.diagnostic.config().virtual_lines
-        vim.diagnostic.config({ virtual_lines = new_config })
-      end
-    '';
-    options = { desc = "Toggle diagnostic virtual_lines"; };
-  }];
+  keymaps = [
+    {
+      mode = "n";
+      key = "<leader>xL";
+      action.__raw = ''
+        function()
+          local new_config = not vim.diagnostic.config().virtual_lines
+          vim.diagnostic.config({ virtual_lines = new_config })
+        end
+      '';
+      options = {
+        desc = "Toggle diagnostic virtual_lines";
+      };
+    }
+  ];
 
   #extraConfigLua = ''
   #  local _border = "rounded"
@@ -165,4 +208,3 @@
   #  }
   #'';
 }
-

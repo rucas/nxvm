@@ -1,1 +1,5 @@
-{ plugins.web-devicons = { enable = true; }; }
+{
+  plugins.web-devicons = {
+    enable = true;
+  };
+}

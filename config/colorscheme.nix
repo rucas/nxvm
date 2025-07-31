@@ -2,7 +2,8 @@
 let
   colors = import ./colors/${config.theme}.nix { };
   lua = x: { __raw = x; };
-in {
+in
+{
   colorschemes.gruvbox = {
     enable = true;
     settings = {
@@ -82,10 +83,14 @@ in {
           bg = colors.faded_blue;
           bold = true;
         };
-        TelescopeMatching = { fg = colors.base08; };
+        TelescopeMatching = {
+          fg = colors.base08;
+        };
 
         # more subtle line numbers
-        LineNr = { fg = colors.base02; };
+        LineNr = {
+          fg = colors.base02;
+        };
         SignColumn = {
           fg = colors.base03;
           bg = colors.background;
@@ -123,10 +128,18 @@ in {
           fg = colors.base08;
         };
 
-        NeoTreeTitleBar = { bg = colors.base05; };
-        NeoTreeFilterTerm = { fg = colors.base08; };
-        NeoTreeNormal = { bg = colors.base01; };
-        NeoTreeNormalNC = { bg = colors.base01; };
+        NeoTreeTitleBar = {
+          bg = colors.base05;
+        };
+        NeoTreeFilterTerm = {
+          fg = colors.base08;
+        };
+        NeoTreeNormal = {
+          bg = colors.base01;
+        };
+        NeoTreeNormalNC = {
+          bg = colors.base01;
+        };
         NeoTreeWinSeparator = {
           bg = "NONE";
           fg = colors.base01;

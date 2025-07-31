@@ -114,8 +114,13 @@
         spacing = 4;
       };
       win = {
-        height = { max = 44; };
-        padding = [ 1 1 ];
+        height = {
+          max = 44;
+        };
+        padding = [
+          1
+          1
+        ];
         # border = "rounded";
         title_pos = "center";
       };

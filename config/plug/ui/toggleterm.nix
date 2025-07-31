@@ -1,4 +1,5 @@
-{ lib, config, ... }: {
+{ lib, config, ... }:
+{
   plugins.toggleterm = {
     enable = true;
     settings = {
@@ -52,10 +53,14 @@
       nargs = 0;
     };
   };
-  keymaps = lib.mkIf config.plugins.toggleterm.enable [{
-    mode = [ "n" ];
-    key = "<leader>Tg";
-    action = "<cmd>GitUI<cr>";
-    options = { desc = "GitUI"; };
-  }];
+  keymaps = lib.mkIf config.plugins.toggleterm.enable [
+    {
+      mode = [ "n" ];
+      key = "<leader>Tg";
+      action = "<cmd>GitUI<cr>";
+      options = {
+        desc = "GitUI";
+      };
+    }
+  ];
 }

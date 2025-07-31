@@ -1,5 +1,7 @@
 {
-  plugins.better-escape = { enable = true; };
+  plugins.better-escape = {
+    enable = true;
+  };
   extraConfigLua = ''
     require("better_escape").setup({
       timeout = 2000,

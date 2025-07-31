@@ -4,4 +4,3 @@ vimUtils.buildVimPlugin {
   src = inputs.precognition;
   version = inputs.precognition.shortRev;
 }
-

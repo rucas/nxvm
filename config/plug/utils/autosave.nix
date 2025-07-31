@@ -1,5 +1,7 @@
 {
-  plugins.auto-save = { enable = true; };
+  plugins.auto-save = {
+    enable = true;
+  };
   extraConfigLua = ''
     local utils = require("auto-save.utils.data")
 

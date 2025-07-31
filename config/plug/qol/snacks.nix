@@ -9,7 +9,9 @@
           only_scope = true;
           only_current = true;
         };
-        animate = { enabled = false; };
+        animate = {
+          enabled = false;
+        };
       };
     };
   };

@@ -1,1 +1,5 @@
-{ plugins.neorg = { enable = true; }; }
+{
+  plugins.neorg = {
+    enable = true;
+  };
+}

@@ -1,9 +1,18 @@
-{ config, lib, pkgs, ... }: {
-  extraPlugins = with pkgs.vimPlugins;
-    [ blink-ripgrep-nvim ]
-    ++ lib.optionals config.plugins.blink-copilot.enable [ blink-cmp-copilot ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
+  extraPlugins =
+    with pkgs.vimPlugins;
+    [ blink-ripgrep-nvim ] ++ lib.optionals config.plugins.blink-copilot.enable [ blink-cmp-copilot ];
 
-  extraPackages = with pkgs; [ gh wordnet ];
+  extraPackages = with pkgs; [
+    gh
+    wordnet
+  ];
 
   plugins = {
     blink-cmp-copilot.enable = false;
@@ -18,8 +27,12 @@
       setupLspCapabilities = true;
 
       settings = {
-        keymap = { preset = "super-tab"; };
-        signature = { enabled = true; };
+        keymap = {
+          preset = "super-tab";
+        };
+        signature = {
+          enabled = true;
+        };
 
         sources = {
           default = [
@@ -60,7 +73,9 @@
               module = "blink-emoji";
               score_offset = 1;
             };
-            lsp = { score_offset = 4; };
+            lsp = {
+              score_offset = 4;
+            };
             spell = {
               name = "Spell";
               module = "blink-cmp-spell";
@@ -72,10 +87,13 @@
               score_offset = 100;
               opts = {
                 commit = { };
-                git_centers = { git_hub = { }; };
+                git_centers = {
+                  git_hub = { };
+                };
               };
             };
-          } // lib.optionalAttrs config.plugins.blink-copilot.enable {
+          }
+          // lib.optionalAttrs config.plugins.blink-copilot.enable {
             copilot = {
               name = "copilot";
               module = "blink-copilot";
@@ -150,13 +168,18 @@
           };
           documentation = {
             auto_show = true;
-            window = { border = "single"; };
+            window = {
+              border = "single";
+            };
             treesitter_highlighting = true;
           };
-          accept = { auto_brackets = { enabled = false; }; };
+          accept = {
+            auto_brackets = {
+              enabled = false;
+            };
+          };
         };
       };
     };
   };
 }
-

@@ -116,7 +116,11 @@
 
       # Set completeopt to have a better completion exper
       # mostly just for cmpience
-      completeopt = [ "menuone" "noselect" "noinsert" ];
+      completeopt = [
+        "menuone"
+        "noselect"
+        "noinsert"
+      ];
 
       # no shada
       shada = "";

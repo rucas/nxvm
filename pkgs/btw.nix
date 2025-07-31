@@ -4,4 +4,3 @@ vimUtils.buildVimPlugin {
   src = inputs.btw;
   version = inputs.btw.shortRev;
 }
-
