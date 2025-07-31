@@ -23,6 +23,7 @@
       servers = {
         bashls = { enable = true; };
         cssls = { enable = true; };
+        gopls = { enable = true; };
         html = { enable = true; };
         jsonls = {
           enable = true;
@@ -42,6 +43,7 @@
         nixd = { enable = true; };
         pyright = { enable = true; };
         sqls = { enable = true; };
+        taplo = { enable = true; };
         terraformls = { enable = true; };
         tinymist = { enable = true; };
         ts_ls = { enable = true; };
