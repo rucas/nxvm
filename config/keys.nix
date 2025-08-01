@@ -1,5 +1,15 @@
 {
   keymaps = [
+    # no op space
+    {
+      mode = "n";
+      key = "<Space>";
+      action = "<NOP>";
+      options = {
+        noremap = true;
+      };
+    }
+
     {
       mode = "n";
       key = "<leader>:";
