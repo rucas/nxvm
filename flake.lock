@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "checkmate": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753721496,
+        "narHash": "sha256-yQJLGso3n69wWqqPn/FTsy9f6KJckQ7vxfm9iF8tHSU=",
+        "owner": "bngarren",
+        "repo": "checkmate.nvim",
+        "rev": "b544f3fd447bdf7e752e2ab8caaa68c4370bc2a2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bngarren",
+        "repo": "checkmate.nvim",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -404,6 +420,7 @@
     "root": {
       "inputs": {
         "btw": "btw",
+        "checkmate": "checkmate",
         "flake-parts": "flake-parts",
         "gitlinker": "gitlinker",
         "neovim-nightly-overlay": "neovim-nightly-overlay",

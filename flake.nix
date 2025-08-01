@@ -36,6 +36,10 @@
       url = "github:linrongbin16/gitlinker.nvim";
       flake = false;
     };
+    checkmate = {
+      url = "github:bngarren/checkmate.nvim";
+      flake = false;
+    };
   };
   outputs =
     {

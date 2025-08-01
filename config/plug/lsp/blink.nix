@@ -1,5 +1,6 @@
 {
   config,
+  helpers,
   lib,
   pkgs,
   ...
@@ -14,7 +15,74 @@
     wordnet
   ];
 
+  # Load friendly-snippets into LuaSnip
+  extraConfigLua = ''
+    require("luasnip.loaders.from_vscode").lazy_load()
+  '';
+
+  # Keymaps for snippet navigation
+  keymaps = [
+    {
+      mode = [
+        "i"
+        "s"
+      ];
+      key = "<Tab>";
+      action = ''
+        function()
+          if require('blink.cmp').is_visible() then
+            return require('blink.cmp').accept()
+          elseif require('luasnip').expand_or_jumpable() then
+            return require('luasnip').expand_or_jump()
+          else
+            return "<Tab>"
+          end
+        end
+      '';
+      lua = true;
+      options = {
+        expr = true;
+        silent = true;
+      };
+    }
+    {
+      mode = [
+        "i"
+        "s"
+      ];
+      key = "<S-Tab>";
+      action = ''
+        function()
+          if require('luasnip').jumpable(-1) then
+            return require('luasnip').jump(-1)
+          else
+            return "<S-Tab>"
+          end
+        end
+      '';
+      lua = true;
+      options = {
+        expr = true;
+        silent = true;
+      };
+    }
+  ];
+
   plugins = {
+    # Enable LuaSnip
+    luasnip = {
+      enable = true;
+      settings = {
+        enable_autosnippets = true;
+        store_selection_keys = "<Tab>";
+      };
+    };
+
+    # Enable friendly-snippets
+    friendly-snippets = {
+      enable = true;
+    };
+
     blink-cmp-copilot.enable = false;
     blink-cmp-dictionary.enable = true;
     blink-cmp-spell.enable = true;
@@ -34,13 +102,35 @@
           enabled = true;
         };
 
+        snippets = {
+          expand = helpers.mkRaw ''
+            function(snippet)
+              require('luasnip').lsp_expand(snippet)
+            end
+          '';
+          active = helpers.mkRaw ''
+            function(filter)
+              if filter and filter.direction then
+                return require('luasnip').jumpable(filter.direction)
+              end
+              return require('luasnip').in_snippet()
+            end
+          '';
+          jump = helpers.mkRaw ''
+            function(direction)
+              require('luasnip').jump(direction)
+            end
+          '';
+        };
+
         sources = {
           default = [
-            "buffer"
+            # "buffer"
             "lsp"
             "path"
             "snippets"
             (lib.mkIf config.plugins.blink-copilot.enable "copilot")
+            "buffer"
             "dictionary"
             "emoji"
             "git"
@@ -52,6 +142,14 @@
               name = "Ripgrep";
               module = "blink-ripgrep";
               score_offset = 1;
+            };
+            snippets = {
+              name = "snippets";
+              module = "blink.cmp.sources.snippets";
+              opts = {
+                friendly_snippets = true;
+                search_paths = [ "${pkgs.vimPlugins.friendly-snippets}" ];
+              };
             };
             dictionary = {
               name = "Dict";

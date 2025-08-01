@@ -133,6 +133,7 @@
       #
       # -- NOTE: needs checktime autocommand still...idk why
       # vim.opt.autoread = true
+      autoread = true;
 
       # NOTE: is this needed for snacks statuscol?
       signcolumn = "auto:2";
