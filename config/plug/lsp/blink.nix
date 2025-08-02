@@ -15,11 +15,6 @@
     wordnet
   ];
 
-  # Load friendly-snippets into LuaSnip
-  extraConfigLua = ''
-    require("luasnip.loaders.from_vscode").lazy_load()
-  '';
-
   # Keymaps for snippet navigation
   keymaps = [
     {
@@ -78,11 +73,6 @@
       };
     };
 
-    # Enable friendly-snippets
-    friendly-snippets = {
-      enable = true;
-    };
-
     blink-cmp-copilot.enable = false;
     blink-cmp-dictionary.enable = true;
     blink-cmp-spell.enable = true;
@@ -138,10 +128,21 @@
             "ripgrep"
           ];
           providers = {
+            buffer = {
+              max_items = 50; # Limit buffer completions
+            };
             ripgrep = {
               name = "Ripgrep";
               module = "blink-ripgrep";
               score_offset = 1;
+              opts = {
+                additional_rg_options = [
+                  "--max-count=20"
+                  "--type-not=log"
+                  "--type-not=binary"
+                  "--iglob=!*.min.js"
+                ];
+              };
             };
             snippets = {
               name = "snippets";
@@ -153,8 +154,15 @@
             };
             dictionary = {
               name = "Dict";
+              enabled = helpers.mkRaw ''
+                function()
+                  return vim.bo.filetype == 'markdown'
+                end
+              '';
               module = "blink-cmp-dictionary";
-              min_keyword_length = 3;
+              # Only trigger on longer words
+              min_keyword_length = 4;
+              max_items = 20;
               opts = {
                 dictionary_files.__raw = ''
                   function()
@@ -181,6 +189,11 @@
             };
             git = {
               module = "blink-cmp-git";
+              enabled = helpers.mkRaw ''
+                function()
+                  return vim.fn.isdirectory('.git') == 1
+                end
+              '';
               name = "git";
               score_offset = 100;
               opts = {
@@ -261,7 +274,7 @@
             };
           };
           trigger = {
-            prefetch_on_insert = true;
+            prefetch_on_insert = false;
             show_in_snippet = false;
           };
           documentation = {
