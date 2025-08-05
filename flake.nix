@@ -36,9 +36,9 @@
       url = "github:linrongbin16/gitlinker.nvim";
       flake = false;
     };
-    checkmate = {
-      url = "github:bngarren/checkmate.nvim";
-      flake = false;
+    neorg-overlay = {
+      url = "github:nvim-neorg/nixpkgs-neorg-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
   outputs =
@@ -46,6 +46,7 @@
       nixvim,
       flake-parts,
       pre-commit-hooks,
+      neorg-overlay,
       ...
     }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
@@ -58,11 +59,14 @@
       perSystem =
         {
           system,
-          pkgs,
           self',
           ...
         }:
         let
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [ neorg-overlay.overlays.default ];
+          };
           nixvim' = nixvim.legacyPackages.${system};
           nvim = nixvim'.makeNixvimWithModule {
             inherit pkgs;
