@@ -150,7 +150,7 @@ in
           fg = colors.base01;
         };
 
-        # Neorg heading highlights matching Gruvbox theme
+        # Neorg heading highlights
         "@neorg.headings.1.title" = {
           fg = colors.base08; # bright red
           bold = true;
@@ -175,13 +175,13 @@ in
           fg = colors.base0E; # bright purple
           bold = true;
         };
-        
+
         # Neorg heading prefix icons
         "@neorg.headings.1.prefix" = {
           fg = colors.base08; # bright red
         };
         "@neorg.headings.2.prefix" = {
-          fg = colors.base09; # bright orange  
+          fg = colors.base09; # bright orange
         };
         "@neorg.headings.3.prefix" = {
           fg = colors.base0A; # bright yellow
