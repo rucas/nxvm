@@ -115,7 +115,6 @@
 
         sources = {
           default = [
-            # "buffer"
             "lsp"
             "path"
             "snippets"
@@ -156,7 +155,7 @@
               name = "Dict";
               enabled = helpers.mkRaw ''
                 function()
-                  return vim.bo.filetype == 'markdown'
+                  return vim.bo.filetype == 'markdown' or vim.bo.filetype == 'norg'
                 end
               '';
               module = "blink-cmp-dictionary";
@@ -166,7 +165,7 @@
               opts = {
                 dictionary_files.__raw = ''
                   function()
-                      if vim.bo.filetype == 'markdown' then
+                      if vim.bo.filetype == 'markdown' or vim.bo.filetype == 'norg' then
                           return { vim.fn.expand('~/.local/share/dict/words') }
                       end
                       return nil
@@ -191,7 +190,7 @@
               module = "blink-cmp-git";
               enabled = helpers.mkRaw ''
                 function()
-                  return vim.fn.isdirectory('.git') == 1
+                  return vim.fn.isdirectory('.git') == 1 and vim.bo.filetype ~= 'norg'
                 end
               '';
               name = "git";

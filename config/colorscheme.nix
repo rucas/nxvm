@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  colors = import ./colors/${config.theme}.nix { };
+  colors = import ../colors/${config.theme}.nix;
   lua = x: { __raw = x; };
 in
 {
@@ -148,6 +148,52 @@ in
         WinSeparator = {
           bg = "NONE";
           fg = colors.base01;
+        };
+
+        # Neorg heading highlights matching Gruvbox theme
+        "@neorg.headings.1.title" = {
+          fg = colors.base08; # bright red
+          bold = true;
+        };
+        "@neorg.headings.2.title" = {
+          fg = colors.base09; # bright orange
+          bold = true;
+        };
+        "@neorg.headings.3.title" = {
+          fg = colors.base0A; # bright yellow
+          bold = true;
+        };
+        "@neorg.headings.4.title" = {
+          fg = colors.base0B; # bright green
+          bold = true;
+        };
+        "@neorg.headings.5.title" = {
+          fg = colors.base0D; # bright blue
+          bold = true;
+        };
+        "@neorg.headings.6.title" = {
+          fg = colors.base0E; # bright purple
+          bold = true;
+        };
+        
+        # Neorg heading prefix icons
+        "@neorg.headings.1.prefix" = {
+          fg = colors.base08; # bright red
+        };
+        "@neorg.headings.2.prefix" = {
+          fg = colors.base09; # bright orange  
+        };
+        "@neorg.headings.3.prefix" = {
+          fg = colors.base0A; # bright yellow
+        };
+        "@neorg.headings.4.prefix" = {
+          fg = colors.base0B; # bright green
+        };
+        "@neorg.headings.5.prefix" = {
+          fg = colors.base0D; # bright blue
+        };
+        "@neorg.headings.6.prefix" = {
+          fg = colors.base0E; # bright purple
         };
       };
     };
