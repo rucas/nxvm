@@ -1,6 +1,6 @@
 { config, helpers, ... }:
 let
-  colors = import ../../colors/${config.theme}.nix { };
+  colors = import ../../../colors/${config.theme}.nix;
   treeWidth = helpers.mkRaw ''
     function()
       local name = vim.fn.bufname("neo-tree")
