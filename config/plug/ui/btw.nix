@@ -1,6 +1,6 @@
-{ pkgs, inputs, ... }:
+{ self', ... }:
 {
-  extraPlugins = [ (pkgs.callPackage ../../../pkgs/btw.nix { inherit inputs; }) ];
+  extraPlugins = [ self'.packages.btw ];
 
   extraConfigLua = ''
     require('btw').setup({

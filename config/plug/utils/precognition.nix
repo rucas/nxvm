@@ -1,6 +1,6 @@
-{ pkgs, inputs, ... }:
+{ self', ... }:
 {
-  extraPlugins = [ (pkgs.callPackage ../../../pkgs/precognition.nix { inherit inputs; }) ];
+  extraPlugins = [ self'.packages.precognition ];
   extraConfigLua = ''
     require('precognition').setup({
       highlightColor = { link = "SignColumn" },

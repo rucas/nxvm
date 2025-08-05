@@ -1,6 +1,6 @@
-{ pkgs, inputs, ... }:
+{ self', ... }:
 {
-  extraPlugins = [ (pkgs.callPackage ../../../pkgs/gitlinker.nix { inherit inputs; }) ];
+  extraPlugins = [ self'.packages.gitlinker ];
   extraConfigLua = ''
     require('gitlinker').setup()
   '';

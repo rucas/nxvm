@@ -40,6 +40,10 @@
       url = "github:nvim-neorg/nixpkgs-neorg-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    neorg-interim-ls = {
+      url = "github:benlubas/neorg-interim-ls";
+      flake = false;
+    };
   };
   outputs =
     {
@@ -74,7 +78,10 @@
               imports = [ ./config ];
               package = inputs.neovim-nightly-overlay.packages.${system}.default;
             };
-            extraSpecialArgs = { inherit inputs; };
+            extraSpecialArgs = {
+              inherit inputs;
+              inherit self';
+            };
           };
         in
         {
@@ -98,7 +105,13 @@
 
           formatter = pkgs.nixfmt-rfc-style;
 
-          packages.default = nvim;
+          packages = {
+            default = nvim;
+            neorg-interim-ls = pkgs.callPackage ./pkgs/neorg-interim-ls.nix { inherit inputs; };
+            btw = pkgs.callPackage ./pkgs/btw.nix { inherit inputs; };
+            gitlinker = pkgs.callPackage ./pkgs/gitlinker.nix { inherit inputs; };
+            precognition = pkgs.callPackage ./pkgs/precognition.nix { inherit inputs; };
+          };
 
           devShells = {
             default = with pkgs; mkShell { inherit (self'.checks.pre-commit-check) shellHook; };
