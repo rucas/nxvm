@@ -44,6 +44,10 @@
       url = "github:benlubas/neorg-interim-ls";
       flake = false;
     };
+    claudecode = {
+      url = "github:coder/claudecode.nvim";
+      flake = false;
+    };
   };
   outputs =
     {
@@ -111,6 +115,7 @@
             btw = pkgs.callPackage ./pkgs/btw.nix { inherit inputs; };
             gitlinker = pkgs.callPackage ./pkgs/gitlinker.nix { inherit inputs; };
             precognition = pkgs.callPackage ./pkgs/precognition.nix { inherit inputs; };
+            claudecode = pkgs.callPackage ./pkgs/claudecode.nix { inherit inputs; };
           };
 
           devShells = {

@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "claudecode": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1754661792,
+        "narHash": "sha256-b4jCKIqowkVuWhI9jxthluZISBOnIc8eOIgkw5++HRY=",
+        "owner": "coder",
+        "repo": "claudecode.nvim",
+        "rev": "985b4b117ea13ec85c92830ecac8f63543dd5ead",
+        "type": "github"
+      },
+      "original": {
+        "owner": "coder",
+        "repo": "claudecode.nvim",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -630,6 +646,7 @@
     "root": {
       "inputs": {
         "btw": "btw",
+        "claudecode": "claudecode",
         "flake-parts": "flake-parts",
         "gitlinker": "gitlinker",
         "neorg-interim-ls": "neorg-interim-ls",
