@@ -131,6 +131,7 @@
               max_items = 50; # Limit buffer completions
             };
             ripgrep = {
+              async = true;
               name = "Ripgrep";
               module = "blink-ripgrep";
               score_offset = 1;
