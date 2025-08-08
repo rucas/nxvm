@@ -128,8 +128,66 @@ in
           fg = colors.base08;
         };
 
+        NeoTreeDirectoryName = {
+          fg = colors.base0B;
+          bold = true;
+        };
+        NeoTreeDirectoryIcon = {
+          fg = colors.base0D;
+        };
+        NeoTreeFileName = {
+          fg = colors.base05;
+        };
+        NeoTreeFileIcon = {
+          fg = colors.base0A;
+        };
+        NeoTreeModified = {
+          fg = colors.base09;
+        };
+        NeoTreeGitAdded = {
+          fg = colors.base0B;
+        };
+        NeoTreeGitDeleted = {
+          fg = colors.base08;
+        };
+        NeoTreeGitModified = {
+          fg = colors.base0A;
+        };
+        NeoTreeGitConflict = {
+          fg = colors.base0E;
+        };
+        NeoTreeGitUntracked = {
+          fg = colors.base0C;
+        };
+        NeoTreeIndentMarker = {
+          fg = colors.base02;
+        };
+        NeoTreeExpander = {
+          fg = colors.base03;
+        };
+        NeoTreeRootName = {
+          fg = colors.base0E;
+          bold = true;
+        };
+        NeoTreeSymbolicLinkTarget = {
+          fg = colors.base0C;
+        };
+        NeoTreeFloatBorder = {
+          fg = colors.base05;
+          bg = colors.base01;
+        };
+        NeoTreeFloatTitle = {
+          fg = colors.base0E;
+          bg = colors.base01;
+          bold = true;
+        };
         NeoTreeTitleBar = {
-          bg = colors.base05;
+          fg = colors.background;
+          bg = colors.base0B;
+          bold = true;
+        };
+        NeoTreePopupBorder = {
+          fg = colors.base05;
         };
         NeoTreeFilterTerm = {
           fg = colors.base08;
