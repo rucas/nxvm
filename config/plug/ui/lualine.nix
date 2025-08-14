@@ -134,6 +134,9 @@ in
             __unkeyed_2 = "filename";
             file_status = true;
             newfile_status = false;
+            extraConfig = {
+              path = 1;
+            };
             symbols = {
               modified = "[+]";
               readonly = "[]";
