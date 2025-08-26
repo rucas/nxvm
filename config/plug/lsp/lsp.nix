@@ -70,6 +70,9 @@
         sqls = {
           enable = true;
         };
+        tailwindcss = {
+          enable = true;
+        };
         taplo = {
           enable = true;
         };
