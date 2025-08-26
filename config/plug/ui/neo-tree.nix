@@ -2,7 +2,13 @@
   plugins.neo-tree = {
     enable = true;
     extraOptions = {
-      use_libuv_file_watcher = true;
+      filesystem = {
+        use_libuv_file_watcher = true;
+        scan_mode = "deep";
+        follow_current_file = {
+          enabled = true;
+        };
+      };
       default_component_configs = {
         name = {
           highlight_opened_files = true;
