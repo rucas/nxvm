@@ -11,6 +11,16 @@
     };
     settings = {
       defaults = {
+        path_display = [ "smart" ];
+        # path_display = {
+        #   shorten = {
+        #     len = 3;
+        #     exclude = [
+        #       (-1) # Shorten directory names to 3 characters
+        #       (-2) # Don't shorten the last two path segments
+        #     ];
+        #   };
+        # };
         prompt_prefix = "";
         entry_prefix = "  ";
         layout_config = {

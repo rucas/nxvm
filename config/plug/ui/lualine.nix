@@ -78,7 +78,7 @@ in
         ];
         lualine_b = [
           {
-            __unkeyed_1 = "mode";
+            __unkeyed-1 = "mode";
             fmt = helpers.mkRaw ''
               function(str)
                 return " " .. string.sub(str, 1, 3)
@@ -119,7 +119,7 @@ in
         ];
         lualine_c = [
           {
-            __unkeyed_1 = "filetype";
+            __unkeyed-1 = "filetype";
             icon_only = true;
             colored = false;
             padding = {
@@ -131,12 +131,10 @@ in
             };
           }
           {
-            __unkeyed_2 = "filename";
+            __unkeyed-2 = "filename";
             file_status = true;
             newfile_status = false;
-            extraConfig = {
-              path = 1;
-            };
+            path = 4;
             symbols = {
               modified = "[+]";
               readonly = "[]";
@@ -150,7 +148,7 @@ in
         ];
         lualine_x = [
           {
-            __unkeyed_1 = "diagnostics";
+            __unkeyed-1 = "diagnostics";
             sources = [ "nvim_lsp" ];
             symbols = {
               error = "E";
@@ -163,13 +161,13 @@ in
         lualine_y = [ { } ];
         lualine_z = [
           {
-            __unkeyed_2 = "location";
+            __unkeyed-2 = "location";
             color = {
               fg = colors.faded_green;
             };
           }
           {
-            __unkeyed_1 = moon;
+            __unkeyed-1 = moon;
             color = {
               fg = colors.faded_blue;
             };
@@ -195,7 +193,7 @@ in
             ];
             lualine_b = [
               {
-                __unkeyed_1 = "mode";
+                __unkeyed-1 = "mode";
                 fmt = helpers.mkRaw ''
                   function(str)
                     return " " .. "NEOTREE"
@@ -269,7 +267,7 @@ in
             ];
             lualine_b = [
               {
-                __unkeyed_1 = "mode";
+                __unkeyed-1 = "mode";
                 fmt = helpers.mkRaw ''
                   function(str)
                     return " " .. string.sub(str, 1, 4)
