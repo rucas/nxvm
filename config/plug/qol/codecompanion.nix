@@ -2,7 +2,7 @@
   plugins.codecompanion = {
     enable = true;
     settings = {
-      adapters = {
+      adapters.http = {
         anthropic = {
           __raw = ''
             function()
