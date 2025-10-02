@@ -6,28 +6,30 @@
       shade_terminals = false;
       open_mapping = "[[<C-\\>]]";
       on_open = ''
-                function(_)
-                  local name = vim.fn.bufname("neo-tree")
-                  local winnr = vim.fn.bufwinnr(name)
+        function(_)
+          vim.defer_fn(function()
+            local name = vim.fn.bufname("neo-tree")
+            local winnr = vim.fn.bufwinnr(name)
 
-                  if winnr == 1 then
-                    vim.defer_fn(function()
-                      local cmd = string.format("Neotree toggle")
-                      vim.cmd(cmd)
-                      vim.cmd(cmd)
-                      vim.cmd("wincmd p")
-                    end, 100)
-                  end
+            if winnr == -1 then
+              vim.cmd("Neotree show")
+            elseif winnr > 0 then
+              vim.cmd(winnr .. "wincmd w")
+              vim.cmd("wincmd H")
+              vim.cmd("vertical resize 40")
+              vim.cmd("wincmd p")
+            end
+          end, 50)
 
-                  vim.keymap.set("t", "<C-w>", function()
-        			vim.fn.feedkeys("\x0c", "n")
-        			vim.opt_local.scrollback = 1
-        			vim.api.nvim_command("startinsert")
-        			vim.api.nvim_feedkeys("clear", "t", false)
-        			vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<cr>", true, false, true), "t", true)
-        			vim.opt_local.scrollback = 100000
-        		  end, { buffer = 0, silent = true })
-                end
+          vim.keymap.set("t", "<C-w>", function()
+            vim.fn.feedkeys("\x0c", "n")
+            vim.opt_local.scrollback = 1
+            vim.api.nvim_command("startinsert")
+            vim.api.nvim_feedkeys("clear", "t", false)
+            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<cr>", true, false, true), "t", true)
+            vim.opt_local.scrollback = 100000
+          end, { buffer = 0, silent = true })
+        end
       '';
     };
   };
