@@ -3,7 +3,10 @@ name: nix flake check
 "on": push
 jobs:
   check:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -14,4 +17,8 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@main
         with:
           logger: pretty
+      - uses: cachix/cachix-action@v15
+        with:
+          name: nxvm
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - run: nix flake check

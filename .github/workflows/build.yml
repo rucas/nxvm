@@ -8,7 +8,10 @@ on:
       - completed
 jobs:
   build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
@@ -20,5 +23,9 @@ jobs:
         uses: DeterminateSystems/nix-installer-action@main
         with:
           logger: pretty
+      - uses: cachix/cachix-action@v15
+        with:
+          name: nxvm
+          authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
       - name: Build
         run: nix build .
