@@ -136,7 +136,7 @@
               module = "blink-ripgrep";
               score_offset = 1;
               opts = {
-                additional_rg_options = [
+                backend.ripgrep.additional_rg_options = [
                   "--max-count=20"
                   "--type-not=log"
                   "--type-not=binary"
