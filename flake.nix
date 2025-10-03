@@ -48,6 +48,14 @@
       url = "github:coder/claudecode.nvim";
       flake = false;
     };
+    tree-sitter-tera = {
+      url = "github:uncenter/tree-sitter-tera";
+      flake = false;
+    };
+    neo-tree = {
+      url = "github:nvim-neo-tree/neo-tree.nvim";
+      flake = false;
+    };
   };
   outputs =
     {
@@ -116,6 +124,8 @@
             gitlinker = pkgs.callPackage ./pkgs/gitlinker.nix { inherit inputs; };
             precognition = pkgs.callPackage ./pkgs/precognition.nix { inherit inputs; };
             claudecode = pkgs.callPackage ./pkgs/claudecode.nix { inherit inputs; };
+            tree-sitter-tera = pkgs.callPackage ./pkgs/tree-sitter-tera.nix { inherit inputs; };
+            neo-tree = pkgs.callPackage ./pkgs/neo-tree.nix { inherit inputs; };
           };
 
           devShells = {

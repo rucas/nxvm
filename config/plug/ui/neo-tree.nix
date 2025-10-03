@@ -1,6 +1,8 @@
+{ self', ... }:
 {
   plugins.neo-tree = {
     enable = true;
+    package = self'.packages.neo-tree;
     extraOptions = {
       filesystem = {
         use_libuv_file_watcher = true;

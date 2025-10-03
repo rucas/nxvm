@@ -333,6 +333,22 @@
         "type": "github"
       }
     },
+    "neo-tree": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1759361253,
+        "narHash": "sha256-u0G7c+NzKneDAw+gEq4/N9O3rinM0v9sengzFM4FpH4=",
+        "owner": "nvim-neo-tree",
+        "repo": "neo-tree.nvim",
+        "rev": "9130e58424ad95bf2dd8b40afbb8cf04d648638c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nvim-neo-tree",
+        "repo": "neo-tree.nvim",
+        "type": "github"
+      }
+    },
     "neorg": {
       "flake": false,
       "locked": {
@@ -631,13 +647,15 @@
         "claudecode": "claudecode",
         "flake-parts": "flake-parts",
         "gitlinker": "gitlinker",
+        "neo-tree": "neo-tree",
         "neorg-interim-ls": "neorg-interim-ls",
         "neorg-overlay": "neorg-overlay",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs_3",
         "nixvim": "nixvim",
         "pre-commit-hooks": "pre-commit-hooks",
-        "precognition": "precognition"
+        "precognition": "precognition",
+        "tree-sitter-tera": "tree-sitter-tera"
       }
     },
     "systems": {
@@ -682,6 +700,22 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "tree-sitter-tera": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1753183909,
+        "narHash": "sha256-3ZUark8lSH8mJwuLcvJPiQnE7+rlXstKkTPjvHzsE38=",
+        "owner": "uncenter",
+        "repo": "tree-sitter-tera",
+        "rev": "692937d52c8dfd91ce0dde722b9b4febbc9bc712",
+        "type": "github"
+      },
+      "original": {
+        "owner": "uncenter",
+        "repo": "tree-sitter-tera",
         "type": "github"
       }
     },
