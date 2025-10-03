@@ -18,6 +18,8 @@
 
     folding = true;
     nixvimInjections = true;
-    grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [ self'.packages.tree-sitter-tera ];
+    grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [
+      self'.packages.tree-sitter-tera
+    ];
   };
 }

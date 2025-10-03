@@ -4,6 +4,10 @@
     enable = true;
     package = self'.packages.neo-tree;
     extraOptions = {
+      enable_diagnostics = false;
+      enable_git_status = true;
+      log_level = "fatal";
+      log_to_file = false;
       filesystem = {
         use_libuv_file_watcher = true;
         scan_mode = "deep";
