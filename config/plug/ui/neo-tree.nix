@@ -3,7 +3,7 @@
   plugins.neo-tree = {
     enable = true;
     package = self'.packages.neo-tree;
-    extraOptions = {
+    settings = {
       enable_diagnostics = false;
       enable_git_status = true;
       log_level = "fatal";
