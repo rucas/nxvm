@@ -41,7 +41,6 @@
           extraOptions = {
             settings = {
               json = {
-                schemas.__raw = "require('schemastore').json.schemas()";
                 validate = {
                   enable = true;
                 };
