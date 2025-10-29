@@ -24,12 +24,10 @@
     enable = true;
     settings = {
       formatters = {
-        prettier_markdown = {
-          command = "prettier";
+        markdown_wrap = {
+          command = "fmt";
           args = [
-            "--stdin-filepath"
-            "$FILENAME"
-            "--print-width"
+            "-w"
             "120"
           ];
         };
@@ -57,8 +55,8 @@
         htmldjango = [ "djlint" ];
         lua = [ "stylua" ];
         markdown = [
-          "prettier_markdown"
           "injected"
+          "markdown_wrap"
         ];
         nix = [ "nixfmt" ];
         python = [
