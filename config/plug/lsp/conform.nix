@@ -43,23 +43,72 @@
                 return
               end
 
-              -- Format using vim's built-in formatting
-              local bufnr = vim.api.nvim_create_buf(false, true)
-              vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+              -- Detect code blocks and skip formatting them
+              local in_code_block = false
+              local segments = {}
+              local current_segment = { is_code = false, lines = {} }
 
-              -- Copy formatting settings from original buffer
-              vim.bo[bufnr].textwidth = textwidth
-              vim.bo[bufnr].formatoptions = vim.bo[ctx.buf].formatoptions
-              vim.bo[bufnr].formatlistpat = vim.bo[ctx.buf].formatlistpat
+              for i, line in ipairs(lines) do
+                -- Check for code fence (``` or ~~~ with optional leading whitespace)
+                local is_fence = line:match("^%s*```") or line:match("^%s*~~~")
 
-              vim.api.nvim_buf_call(bufnr, function()
-                vim.cmd("silent! normal! gggqG")
-              end)
+                if is_fence then
+                  -- Save current segment if it has content
+                  if #current_segment.lines > 0 then
+                    table.insert(segments, current_segment)
+                  end
 
-              local formatted = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-              vim.api.nvim_buf_delete(bufnr, { force = true })
+                  -- Toggle code block state
+                  in_code_block = not in_code_block
 
-              callback(nil, formatted)
+                  -- Start new segment
+                  current_segment = { is_code = in_code_block, lines = { line } }
+                elseif in_code_block then
+                  -- Inside code block - preserve as-is
+                  table.insert(current_segment.lines, line)
+                else
+                  -- Outside code block - add to current segment
+                  table.insert(current_segment.lines, line)
+                end
+              end
+
+              -- Add final segment
+              if #current_segment.lines > 0 then
+                table.insert(segments, current_segment)
+              end
+
+              -- Format each non-code segment
+              local result = {}
+              for _, segment in ipairs(segments) do
+                if segment.is_code then
+                  -- Preserve code blocks as-is
+                  for _, line in ipairs(segment.lines) do
+                    table.insert(result, line)
+                  end
+                else
+                  -- Format non-code segments with gq
+                  local bufnr = vim.api.nvim_create_buf(false, true)
+                  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, segment.lines)
+
+                  -- Copy formatting settings from original buffer
+                  vim.bo[bufnr].textwidth = textwidth
+                  vim.bo[bufnr].formatoptions = vim.bo[ctx.buf].formatoptions
+                  vim.bo[bufnr].formatlistpat = vim.bo[ctx.buf].formatlistpat
+
+                  vim.api.nvim_buf_call(bufnr, function()
+                    vim.cmd("silent! normal! gggqG")
+                  end)
+
+                  local formatted = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+                  vim.api.nvim_buf_delete(bufnr, { force = true })
+
+                  for _, line in ipairs(formatted) do
+                    table.insert(result, line)
+                  end
+                end
+              end
+
+              callback(nil, result)
             end
           '';
         };
