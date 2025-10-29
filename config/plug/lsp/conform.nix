@@ -24,6 +24,29 @@
     enable = true;
     settings = {
       formatters = {
+        markdown_gq = {
+          format.__raw = ''
+            function(self, ctx, lines, callback)
+              local textwidth = vim.bo[ctx.buf].textwidth
+
+              -- Format using vim's built-in formatting
+              local bufnr = vim.api.nvim_create_buf(false, true)
+              vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+              vim.bo[bufnr].textwidth = textwidth
+              vim.bo[bufnr].filetype = "markdown"
+
+              local line_count = vim.api.nvim_buf_line_count(bufnr)
+              vim.api.nvim_buf_call(bufnr, function()
+                vim.cmd("normal! gggqG")
+              end)
+
+              local formatted = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+              vim.api.nvim_buf_delete(bufnr, { force = true })
+
+              callback(nil, formatted)
+            end
+          '';
+        };
         sqruff = {
           command = "sqruff";
           args = [
@@ -47,7 +70,10 @@
         htmlangular = [ "prettierd" ];
         htmldjango = [ "djlint" ];
         lua = [ "stylua" ];
-        markdown = [ "injected" ];
+        markdown = [
+          "injected"
+          "markdown_gq"
+        ];
         nix = [ "nixfmt" ];
         python = [
           "isort"

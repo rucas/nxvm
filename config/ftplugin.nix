@@ -10,6 +10,9 @@ in
     "ftplugin/checkhealth.lua".text = ''
       vim.opt_local.spell = false
     '';
+    "ftplugin/markdown.lua".text = ''
+      vim.opt_local.textwidth = 120
+    '';
     "ftplugin/norg.lua".text = '''';
   };
 }
