@@ -46,7 +46,11 @@
               -- Format using vim's built-in formatting
               local bufnr = vim.api.nvim_create_buf(false, true)
               vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
+
+              -- Copy formatting settings from original buffer
               vim.bo[bufnr].textwidth = textwidth
+              vim.bo[bufnr].formatoptions = vim.bo[ctx.buf].formatoptions
+              vim.bo[bufnr].formatlistpat = vim.bo[ctx.buf].formatlistpat
 
               vim.api.nvim_buf_call(bufnr, function()
                 vim.cmd("silent! normal! gggqG")
