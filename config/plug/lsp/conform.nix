@@ -48,6 +48,10 @@
               vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
               vim.bo[bufnr].textwidth = textwidth
 
+              -- Configure list formatting for markdown
+              vim.bo[bufnr].formatoptions = "tcroqn"
+              vim.bo[bufnr].formatlistpat = [[^\s*\d\+\.\s\+\|^\s*[-*+]\s\+]]
+
               vim.api.nvim_buf_call(bufnr, function()
                 vim.cmd("silent! normal! gggqG")
               end)
