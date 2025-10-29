@@ -56,7 +56,10 @@
         htmlangular = [ "prettierd" ];
         htmldjango = [ "djlint" ];
         lua = [ "stylua" ];
-        markdown = [ "prettier_markdown" ];
+        markdown = [
+          "prettier_markdown"
+          "injected"
+        ];
         nix = [ "nixfmt" ];
         python = [
           "isort"
