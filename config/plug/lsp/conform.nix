@@ -29,15 +29,27 @@
             function(self, ctx, lines, callback)
               local textwidth = vim.bo[ctx.buf].textwidth
 
+              -- Early exit if no line exceeds textwidth
+              local needs_format = false
+              for _, line in ipairs(lines) do
+                if #line > textwidth then
+                  needs_format = true
+                  break
+                end
+              end
+
+              if not needs_format then
+                callback(nil, lines)
+                return
+              end
+
               -- Format using vim's built-in formatting
               local bufnr = vim.api.nvim_create_buf(false, true)
               vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
               vim.bo[bufnr].textwidth = textwidth
-              vim.bo[bufnr].filetype = "markdown"
 
-              local line_count = vim.api.nvim_buf_line_count(bufnr)
               vim.api.nvim_buf_call(bufnr, function()
-                vim.cmd("normal! gggqG")
+                vim.cmd("silent! normal! gggqG")
               end)
 
               local formatted = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
