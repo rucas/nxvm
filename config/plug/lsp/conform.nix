@@ -24,6 +24,15 @@
     enable = true;
     settings = {
       formatters = {
+        prettier_markdown = {
+          command = "prettier";
+          args = [
+            "--stdin-filepath"
+            "$FILENAME"
+            "--print-width"
+            "120"
+          ];
+        };
         sqruff = {
           command = "sqruff";
           args = [
@@ -47,7 +56,7 @@
         htmlangular = [ "prettierd" ];
         htmldjango = [ "djlint" ];
         lua = [ "stylua" ];
-        markdown = [ "injected" ];
+        markdown = [ "prettier_markdown" ];
         nix = [ "nixfmt" ];
         python = [
           "isort"
