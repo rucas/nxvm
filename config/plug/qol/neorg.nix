@@ -70,6 +70,9 @@
             enable = true;
             documentation = true;
           };
+          goto_definition_provider = {
+            enable = true;
+          };
         };
       };
     };
