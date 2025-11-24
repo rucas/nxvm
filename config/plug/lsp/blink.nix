@@ -23,7 +23,7 @@
         "s"
       ];
       key = "<Tab>";
-      action = ''
+      action.__raw = ''
         function()
           if require('blink.cmp').is_visible() then
             return require('blink.cmp').accept()
@@ -34,7 +34,6 @@
           end
         end
       '';
-      lua = true;
       options = {
         expr = true;
         silent = true;
@@ -46,7 +45,7 @@
         "s"
       ];
       key = "<S-Tab>";
-      action = ''
+      action.__raw = ''
         function()
           if require('luasnip').jumpable(-1) then
             return require('luasnip').jump(-1)
@@ -55,7 +54,6 @@
           end
         end
       '';
-      lua = true;
       options = {
         expr = true;
         silent = true;
