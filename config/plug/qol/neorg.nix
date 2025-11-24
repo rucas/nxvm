@@ -59,6 +59,15 @@
           };
         };
       };
+      "core.keybinds" = {
+        config = {
+          hook.__raw = ''
+            function(keybinds)
+              keybinds.remap_event("norg", "n", "gd", "core.esupports.hop.hop-link")
+            end
+          '';
+        };
+      };
       "core.esupports.hop" = {
         config = {
           external_file_mode = "split";
@@ -69,9 +78,6 @@
           completion_provider = {
             enable = true;
             documentation = true;
-          };
-          goto_definition_provider = {
-            enable = true;
           };
         };
       };
