@@ -12,6 +12,14 @@
       "core.defaults" = {
         __empty = null;
       };
+      "core.dirman" = {
+        config = {
+          workspaces = {
+            ledger = "~/Code/ledger";
+          };
+          default_workspace = "ledger";
+        };
+      };
       "core.concealer" = {
         config = {
           icon_preset = "basic";
@@ -57,20 +65,6 @@
           engine = {
             module_name = "external.lsp-completion";
           };
-        };
-      };
-      "core.keybinds" = {
-        config = {
-          hook.__raw = ''
-            function(keybinds)
-              keybinds.remap_event("norg", "n", "gd", "core.esupports.hop.hop-link")
-            end
-          '';
-        };
-      };
-      "core.esupports.hop" = {
-        config = {
-          external_file_mode = "split";
         };
       };
       "external.interim-ls" = {
