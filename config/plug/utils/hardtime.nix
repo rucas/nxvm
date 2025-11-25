@@ -4,6 +4,12 @@
     settings = {
       enabled = true;
       disable_mouse = false;
+      # NOTE: This doesnt work for norg. Why?
+      disabled_filetypes = [
+        "norg"
+        "qf"
+        "neo-tree"
+      ];
       hint = true;
       max_count = 4;
       max_time = 1000;

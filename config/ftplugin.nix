@@ -13,6 +13,8 @@ in
     "ftplugin/markdown.lua".text = ''
       vim.opt_local.textwidth = 120
     '';
-    "ftplugin/norg.lua".text = '''';
+    "ftplugin/norg.lua".text = ''
+      require("hardtime").disable()
+    '';
   };
 }
