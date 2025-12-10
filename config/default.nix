@@ -14,7 +14,6 @@
     ./plug/lsp/lsp.nix
     ./plug/lsp/trouble.nix
     ./plug/qol/claudecode.nix
-    ./plug/qol/codecompanion.nix
     ./plug/qol/neorg.nix
     ./plug/qol/snacks.nix
     ./plug/treesitter/treesitter-context.nix
