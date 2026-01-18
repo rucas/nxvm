@@ -1,14 +1,14 @@
-{ config, helpers, ... }:
+{ config, lib, ... }:
 let
   colors = import ../../../colors/${config.theme}.nix;
-  treeWidth = helpers.mkRaw ''
+  treeWidth = lib.nixvim.mkRaw ''
     function()
       local name = vim.fn.bufname("neo-tree")
       local winnr = vim.fn.bufwinnr(name)
       local tree_width = vim.fn.winwidth(winnr)
       return string.rep(" ", tree_width)
     end'';
-  moon = helpers.mkRaw ''
+  moon = lib.nixvim.mkRaw ''
     function()
       local chars = setmetatable({
         " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
@@ -79,12 +79,12 @@ in
         lualine_b = [
           {
             __unkeyed-1 = "mode";
-            fmt = helpers.mkRaw ''
+            fmt = lib.nixvim.mkRaw ''
               function(str)
                 return " " .. string.sub(str, 1, 3)
               end
             '';
-            color = helpers.mkRaw ''
+            color = lib.nixvim.mkRaw ''
               function()
                 local mode_color = {
                     n = '${colors.base08}',
@@ -194,12 +194,12 @@ in
             lualine_b = [
               {
                 __unkeyed-1 = "mode";
-                fmt = helpers.mkRaw ''
+                fmt = lib.nixvim.mkRaw ''
                   function(str)
                     return " " .. "NEOTREE"
                   end
                 '';
-                color = helpers.mkRaw ''
+                color = lib.nixvim.mkRaw ''
                   function()
                     local mode_color = {
                         n = '${colors.base08}',
@@ -238,7 +238,7 @@ in
               {
                 __unkeyed = "branch";
                 icon = " ";
-                fmt = helpers.mkRaw ''
+                fmt = lib.nixvim.mkRaw ''
                   function(str)
                     return "[" .. str .. "]"
                   end
@@ -268,12 +268,12 @@ in
             lualine_b = [
               {
                 __unkeyed-1 = "mode";
-                fmt = helpers.mkRaw ''
+                fmt = lib.nixvim.mkRaw ''
                   function(str)
                     return " " .. string.sub(str, 1, 4)
                   end
                 '';
-                color = helpers.mkRaw ''
+                color = lib.nixvim.mkRaw ''
                   function()
                     local mode_color = {
                         n = '${colors.base08}',
@@ -312,7 +312,7 @@ in
               {
                 __unkeyed = "branch";
                 icon = " ";
-                fmt = helpers.mkRaw ''
+                fmt = lib.nixvim.mkRaw ''
                   function(str)
                     return "[" .. str .. "]"
                   end

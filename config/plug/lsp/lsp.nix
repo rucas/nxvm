@@ -1,4 +1,4 @@
-{ helpers, ... }:
+{ lib, ... }:
 {
   plugins = {
     schemastore = {
@@ -162,7 +162,7 @@
     virtual_text = false;
     virtual_lines = false;
     signs = {
-      text = helpers.toRawKeys {
+      text = lib.nixvim.toRawKeys {
         "vim.diagnostic.severity.ERROR" = "󰅙";
         "vim.diagnostic.severity.WARN" = "";
         "vim.diagnostic.severity.INFO" = "󰋼";

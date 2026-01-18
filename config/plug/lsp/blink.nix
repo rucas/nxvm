@@ -1,6 +1,5 @@
 {
   config,
-  helpers,
   lib,
   pkgs,
   ...
@@ -91,12 +90,12 @@
         };
 
         snippets = {
-          expand = helpers.mkRaw ''
+          expand = lib.nixvim.mkRaw ''
             function(snippet)
               require('luasnip').lsp_expand(snippet)
             end
           '';
-          active = helpers.mkRaw ''
+          active = lib.nixvim.mkRaw ''
             function(filter)
               if filter and filter.direction then
                 return require('luasnip').jumpable(filter.direction)
@@ -104,7 +103,7 @@
               return require('luasnip').in_snippet()
             end
           '';
-          jump = helpers.mkRaw ''
+          jump = lib.nixvim.mkRaw ''
             function(direction)
               require('luasnip').jump(direction)
             end
@@ -152,7 +151,7 @@
             };
             dictionary = {
               name = "Dict";
-              enabled = helpers.mkRaw ''
+              enabled = lib.nixvim.mkRaw ''
                 function()
                   return vim.bo.filetype == 'markdown' or vim.bo.filetype == 'norg'
                 end
@@ -187,7 +186,7 @@
             };
             git = {
               module = "blink-cmp-git";
-              enabled = helpers.mkRaw ''
+              enabled = lib.nixvim.mkRaw ''
                 function()
                   return vim.fn.isdirectory('.git') == 1 and vim.bo.filetype ~= 'norg'
                 end

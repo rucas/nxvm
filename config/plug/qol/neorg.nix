@@ -4,7 +4,7 @@
     self'.packages.neorg-interim-ls
   ];
 
-  extraConfigLua = '''';
+  extraConfigLua = "";
 
   plugins.neorg = {
     enable = true;
