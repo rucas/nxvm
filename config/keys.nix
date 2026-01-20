@@ -156,14 +156,22 @@
       action = ":";
     }
 
+    # NOTE: yanks from cursor to end of line
     {
-      mode = [
-        "n"
-        "v"
-      ];
+      mode = "n";
       key = "<leader>YY";
       action = ''
-        "+Y
+        "+y$
+      '';
+      options = {
+        desc = "Copy to system clipboard";
+      };
+    }
+    {
+      mode = "v";
+      key = "<leader>YY";
+      action = ''
+        "+y
       '';
       options = {
         desc = "Copy to system clipboard";

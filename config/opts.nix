@@ -1,5 +1,32 @@
 {
   config = {
+    extraConfigLua = ''
+      -- Detect if running in SSH session
+      local function is_ssh()
+        return os.getenv("SSH_CONNECTION") ~= nil or os.getenv("SSH_TTY") ~= nil
+      end
+
+      -- Configure clipboard based on environment
+      if is_ssh() then
+        -- Use OSC 52 for SSH sessions
+        vim.g.clipboard = {
+          name = 'OSC 52',
+          copy = {
+            ['+'] = require('vim.ui.clipboard.osc52').copy('+'),
+            ['*'] = require('vim.ui.clipboard.osc52').copy('*'),
+          },
+          paste = {
+            ['+'] = require('vim.ui.clipboard.osc52').paste('+'),
+            ['*'] = require('vim.ui.clipboard.osc52').paste('*'),
+          },
+        }
+        vim.opt.clipboard = 'unnamedplus'
+      else
+        -- Use system clipboard for local sessions
+        vim.opt.clipboard = 'unnamedplus'
+      end
+    '';
+
     opts = {
       # -- encoding --
       encoding = "utf-8";
@@ -27,7 +54,7 @@
       mouse = "a";
 
       # auto-sync yanks to system clipboard (uses OSC 52 over SSH)
-      clipboard = ["unnamedplus"];
+      # Configured via extraConfigLua above
 
       # -- Searching --
 
