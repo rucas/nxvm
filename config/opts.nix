@@ -26,6 +26,9 @@
       # mouse mode for all
       mouse = "a";
 
+      # auto-sync yanks to system clipboard (uses OSC 52 over SSH)
+      clipboard = ["unnamedplus"];
+
       # -- Searching --
 
       # ignore case
