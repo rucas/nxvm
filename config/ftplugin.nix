@@ -69,11 +69,88 @@ in
         vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
       end
 
-      -- Buffer-local keymap
+      -- Normal mode 'o' and 'O' for task continuation
+      local function normal_o_below()
+        local line = vim.api.nvim_get_current_line()
+        local row = vim.api.nvim_win_get_cursor(0)[1]
+
+        -- Try matching asterisk tasks
+        local stars, checkbox, star_content = line:match("^(%*+)%s*(%b())%s*(.*)$")
+
+        -- Try matching dash tasks
+        local indent, dash_content
+        if not stars then
+          indent, checkbox, dash_content = line:match("^(%s*)%-%s*(%b())%s*(.*)$")
+        end
+
+        -- Not a task item, use default 'o' behavior
+        if not checkbox then
+          return vim.api.nvim_feedkeys("o", "n", false)
+        end
+
+        -- Create new task item
+        local is_asterisk = stars ~= nil
+        local new_bullet
+        if is_asterisk then
+          new_bullet = stars .. " ( ) "
+        else
+          new_bullet = indent .. "- ( ) "
+        end
+
+        -- Insert new line and enter insert mode
+        vim.api.nvim_buf_set_lines(0, row, row, false, {new_bullet})
+        vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
+        vim.cmd("startinsert!")
+      end
+
+      local function normal_o_above()
+        local line = vim.api.nvim_get_current_line()
+        local row = vim.api.nvim_win_get_cursor(0)[1]
+
+        -- Try matching asterisk tasks
+        local stars, checkbox, star_content = line:match("^(%*+)%s*(%b())%s*(.*)$")
+
+        -- Try matching dash tasks
+        local indent, dash_content
+        if not stars then
+          indent, checkbox, dash_content = line:match("^(%s*)%-%s*(%b())%s*(.*)$")
+        end
+
+        -- Not a task item, use default 'O' behavior
+        if not checkbox then
+          return vim.api.nvim_feedkeys("O", "n", false)
+        end
+
+        -- Create new task item
+        local is_asterisk = stars ~= nil
+        local new_bullet
+        if is_asterisk then
+          new_bullet = stars .. " ( ) "
+        else
+          new_bullet = indent .. "- ( ) "
+        end
+
+        -- Insert new line above and enter insert mode
+        vim.api.nvim_buf_set_lines(0, row - 1, row - 1, false, {new_bullet})
+        vim.api.nvim_win_set_cursor(0, {row, #new_bullet})
+        vim.cmd("startinsert!")
+      end
+
+      -- Buffer-local keymaps
       vim.keymap.set("i", "<CR>", continue_bullet, {
         buffer = 0,
         silent = true,
-        desc = "Continue neorg bullet/heading"
+        desc = "Continue neorg task on Enter"
+      })
+      vim.keymap.set("n", "o", normal_o_below, {
+        buffer = 0,
+        silent = true,
+        desc = "Create neorg task below"
+      })
+      vim.keymap.set("n", "O", normal_o_above, {
+        buffer = 0,
+        silent = true,
+        desc = "Create neorg task above"
       })
     '';
   };
