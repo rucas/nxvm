@@ -26,6 +26,19 @@ in
         local line = vim.api.nvim_get_current_line()
         local row, col = unpack(vim.api.nvim_win_get_cursor(0))
 
+        -- Check if cursor is at end of line (or only whitespace remains)
+        local text_after_cursor = line:sub(col + 1)
+        local has_text_after = text_after_cursor:match("%S") ~= nil
+
+        -- If there's non-whitespace text after cursor, use normal Enter behavior
+        if has_text_after then
+          return vim.api.nvim_feedkeys(
+            vim.api.nvim_replace_termcodes("<CR>", true, false, true),
+            "n",
+            true
+          )
+        end
+
         -- Try matching asterisk tasks: "*** ( ) TODO" or "**** (x) task"
         local stars, checkbox, star_content = line:match("^(%*+)%s*(%b())%s*(.*)$")
 
