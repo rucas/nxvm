@@ -47,5 +47,6 @@
   config = {
     theme = "gruvbox";
     globals.mapleader = " ";
+    globals.maplocalleader = " ";
   };
 }
