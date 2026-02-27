@@ -1,6 +1,6 @@
 {
   plugins.hardtime = {
-    enable = true;
+    enable = false;
     settings = {
       enabled = true;
       disable_mouse = false;

@@ -12,6 +12,12 @@
       "core.defaults" = {
         __empty = null;
       };
+      "core.keybinds" = {
+        config = {
+          default_keybinds = true;
+          preset = "neorg";
+        };
+      };
       "core.dirman" = {
         config = {
           workspaces = {
