@@ -47,8 +47,39 @@ in
           indent, checkbox, dash_content = line:match("^(%s*)%-%s*(%b())%s*(.*)$")
         end
 
-        -- Not a task item (no checkbox found), use default Enter behavior
+        -- Non-task heading: "* heading", "** heading"
+        local heading_stars, heading_content
         if not checkbox then
+          heading_stars, heading_content = line:match("^(%*+)%s+(.*)$")
+        end
+
+        -- Non-task dash item: "- item", "  - item"
+        local dash_indent, plain_dash_content
+        if not checkbox and not heading_stars then
+          dash_indent, plain_dash_content = line:match("^(%s*)%-%s+(.*)$")
+        end
+
+        -- Not a task item (no checkbox found), check for non-task list items
+        if not checkbox then
+          if heading_stars then
+            if heading_content == "" then
+              vim.api.nvim_set_current_line("")
+              return
+            end
+            local new_bullet = heading_stars .. " "
+            vim.api.nvim_buf_set_lines(0, row, row, false, {new_bullet})
+            vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
+            return
+          elseif dash_indent then
+            if plain_dash_content == "" then
+              vim.api.nvim_set_current_line("")
+              return
+            end
+            local new_bullet = dash_indent .. "- "
+            vim.api.nvim_buf_set_lines(0, row, row, false, {new_bullet})
+            vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
+            return
+          end
           return vim.api.nvim_feedkeys(
             vim.api.nvim_replace_termcodes("<CR>", true, false, true),
             "n",
@@ -95,8 +126,33 @@ in
           indent, checkbox, dash_content = line:match("^(%s*)%-%s*(%b())%s*(.*)$")
         end
 
-        -- Not a task item, use default 'o' behavior
+        -- Non-task heading: "* heading", "** heading"
+        local heading_stars, heading_content
         if not checkbox then
+          heading_stars, heading_content = line:match("^(%*+)%s+(.*)$")
+        end
+
+        -- Non-task dash item: "- item", "  - item"
+        local dash_indent, plain_dash_content
+        if not checkbox and not heading_stars then
+          dash_indent, plain_dash_content = line:match("^(%s*)%-%s+(.*)$")
+        end
+
+        -- Not a task item, check for non-task list items
+        if not checkbox then
+          if heading_stars then
+            local new_bullet = heading_stars .. " "
+            vim.api.nvim_buf_set_lines(0, row, row, false, {new_bullet})
+            vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
+            vim.cmd("startinsert!")
+            return
+          elseif dash_indent then
+            local new_bullet = dash_indent .. "- "
+            vim.api.nvim_buf_set_lines(0, row, row, false, {new_bullet})
+            vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
+            vim.cmd("startinsert!")
+            return
+          end
           return vim.api.nvim_feedkeys("o", "n", false)
         end
 
@@ -128,8 +184,33 @@ in
           indent, checkbox, dash_content = line:match("^(%s*)%-%s*(%b())%s*(.*)$")
         end
 
-        -- Not a task item, use default 'O' behavior
+        -- Non-task heading: "* heading", "** heading"
+        local heading_stars, heading_content
         if not checkbox then
+          heading_stars, heading_content = line:match("^(%*+)%s+(.*)$")
+        end
+
+        -- Non-task dash item: "- item", "  - item"
+        local dash_indent, plain_dash_content
+        if not checkbox and not heading_stars then
+          dash_indent, plain_dash_content = line:match("^(%s*)%-%s+(.*)$")
+        end
+
+        -- Not a task item, check for non-task list items
+        if not checkbox then
+          if heading_stars then
+            local new_bullet = heading_stars .. " "
+            vim.api.nvim_buf_set_lines(0, row - 1, row - 1, false, {new_bullet})
+            vim.api.nvim_win_set_cursor(0, {row, #new_bullet})
+            vim.cmd("startinsert!")
+            return
+          elseif dash_indent then
+            local new_bullet = dash_indent .. "- "
+            vim.api.nvim_buf_set_lines(0, row - 1, row - 1, false, {new_bullet})
+            vim.api.nvim_win_set_cursor(0, {row, #new_bullet})
+            vim.cmd("startinsert!")
+            return
+          end
           return vim.api.nvim_feedkeys("O", "n", false)
         end
 
