@@ -29,6 +29,7 @@
       "core.concealer" = {
         config = {
           folds = true;
+          foldlevel = 99;
           icon_preset = "basic";
           icons = {
             heading = {
