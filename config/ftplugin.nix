@@ -626,6 +626,55 @@ in
           desc = "Mark task as ambiguous (?)"
         })
       end)
+
+      local tag_palette = {
+        "${colors.base08}",
+        "${colors.base09}",
+        "${colors.base0A}",
+        "${colors.base0B}",
+        "${colors.base0C}",
+        "${colors.base0D}",
+        "${colors.base0E}",
+        "${colors.base0F}",
+      }
+
+      local function tag_color(name)
+        local h = 0
+        for i = 1, #name do
+          h = (h * 31 + name:byte(i)) % #tag_palette
+        end
+        return tag_palette[h + 1]
+      end
+
+      local tag_match_ids = {}
+
+      local function refresh_tag_highlights()
+        for _, id in ipairs(tag_match_ids) do
+          pcall(vim.fn.matchdelete, id)
+        end
+        tag_match_ids = {}
+
+        local seen = {}
+        for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
+          for tag in line:gmatch("%f[%S]#(%w[%w-]*)") do
+            if not seen[tag] then
+              seen[tag] = true
+              local hl = "NeorgTag_" .. tag:gsub("-", "_")
+              local color = tag_color(tag)
+              vim.api.nvim_set_hl(0, hl, { fg = "${colors.background}", bg = color, bold = true })
+              local id = vim.fn.matchadd(hl, [[\(\s\|^\)\zs#]] .. tag:gsub("%-", "\\-") .. [[\>]])
+              table.insert(tag_match_ids, id)
+            end
+          end
+        end
+      end
+
+      refresh_tag_highlights()
+
+      vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+        buffer = 0,
+        callback = refresh_tag_highlights,
+      })
     '';
   };
 }
