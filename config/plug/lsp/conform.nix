@@ -11,7 +11,7 @@
     djlint
     jq
     nixfmt
-    nodePackages.prettier
+    prettier
     prettierd
     shellcheck
     stylua
