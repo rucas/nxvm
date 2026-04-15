@@ -268,12 +268,16 @@ in
         local current = start_line
 
         while current < total_lines do
-          local line = vim.api.nvim_buf_get_lines(0, current, current + 1, false)[1]
-          -- Check if line ends with backslash continuation
-          if not line:match("\\%s*$") then
-            return current
+          local next_line = vim.api.nvim_buf_get_lines(0, current + 1, current + 2, false)[1]
+          if not next_line then
+            break
           end
-          current = current + 1
+          -- Continuation: line starts with whitespace and isn't a new task or heading
+          if next_line:match("^%s+%S") and not next_line:match("^%s*%*") and not next_line:match("^%s*%-%s*%b()") then
+            current = current + 1
+          else
+            break
+          end
         end
 
         return current
@@ -388,27 +392,25 @@ in
         local task_content = is_asterisk and star_content or dash_content
         local level = is_asterisk and #stars or #indent
 
-        -- Mark as done
+        -- Find task boundaries before modifying the buffer
+        local task_end = get_task_end_line(current_line_num - 1)
+        local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
+
+        -- Mark as done in memory
         local new_line
         if is_asterisk then
           new_line = stars .. " (x) " .. task_content
         else
           new_line = indent .. "- (x) " .. task_content
         end
-        vim.api.nvim_set_current_line(new_line)
-
-        -- Find task boundaries (including continuations)
-        local task_end = get_task_end_line(current_line_num - 1)
-        local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
-
-        -- Update the first line to have the done marker
         task_lines[1] = new_line
 
         -- Find where to move the task (bottom of current list)
         local destination = find_list_bottom(current_line_num, level, not is_asterisk)
 
-        -- If already at bottom, don't move
+        -- If already at bottom, just update the checkbox
         if destination <= task_end + 1 then
+          vim.api.nvim_buf_set_lines(0, current_line_num - 1, task_end + 1, false, task_lines)
           return
         end
 
@@ -509,27 +511,25 @@ in
           return
         end
 
-        -- Mark as important
+        -- Find task boundaries before modifying the buffer
+        local task_end = get_task_end_line(current_line_num - 1)
+        local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
+
+        -- Mark as important in memory
         local new_line
         if is_asterisk then
           new_line = stars .. " (!) " .. task_content
         else
           new_line = indent .. "- (!) " .. task_content
         end
-        vim.api.nvim_set_current_line(new_line)
-
-        -- Find task boundaries (including continuations)
-        local task_end = get_task_end_line(current_line_num - 1)
-        local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
-
-        -- Update the first line to have the important marker
         task_lines[1] = new_line
 
         -- Find where to move the task (top of current list)
         local destination = find_list_top(current_line_num, level, not is_asterisk)
 
-        -- If already at top, don't move
+        -- If already at top, just update the checkbox
         if destination >= current_line_num then
+          vim.api.nvim_buf_set_lines(0, current_line_num - 1, task_end + 1, false, task_lines)
           return
         end
 
@@ -656,7 +656,7 @@ in
 
         local seen = {}
         for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
-          for tag in line:gmatch("%f[%S]#(%w[%w-]*)") do
+          for tag in line:gmatch("%f[%S]#([%w_][%w_-]*)") do
             if not seen[tag] then
               seen[tag] = true
               local hl = "NeorgTag_" .. tag:gsub("-", "_")
