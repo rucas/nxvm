@@ -91,10 +91,12 @@
             inherit system;
             overlays = [ neorg-overlay.overlays.default ];
           };
-          neovim-nightly-no-check = inputs.neovim-nightly-overlay.packages.${system}.default.overrideAttrs (_: {
-            doCheck = false;
-            doInstallCheck = false;
-          });
+          neovim-nightly-no-check =
+            inputs.neovim-nightly-overlay.packages.${system}.default.overrideAttrs
+              (_: {
+                doCheck = false;
+                doInstallCheck = false;
+              });
           nixvim' = nixvim.legacyPackages.${system};
           nvim = nixvim'.makeNixvimWithModule {
             inherit pkgs;
