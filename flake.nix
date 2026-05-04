@@ -90,6 +90,7 @@
           pkgs = import inputs.nixpkgs {
             inherit system;
             overlays = [ neorg-overlay.overlays.default ];
+            config.allowUnfree = true;
           };
           neovim-nightly-no-check =
             inputs.neovim-nightly-overlay.packages.${system}.default.overrideAttrs
