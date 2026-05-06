@@ -20,6 +20,18 @@ in
         vim.opt_local.foldlevel = 0
       end)
 
+      local function find_parent_bullet(row)
+        for i = row - 1, 1, -1 do
+          local l = vim.api.nvim_buf_get_lines(0, i - 1, i, false)[1]
+          local s = l:match("^(%*+)%s*%b()")
+          if s then return s .. " ( ) " end
+          local ind = l:match("^(%s*)%-%s*%b()")
+          if ind then return ind .. "- ( ) " end
+          if l:match("^%*") or l:match("^%s*%-") then return nil end
+        end
+        return nil
+      end
+
       -- Task item continuation (only for items with checkboxes)
       local function continue_bullet()
         local line = vim.api.nvim_get_current_line()
@@ -80,6 +92,12 @@ in
             vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
             return
           end
+          local parent = find_parent_bullet(row)
+          if parent then
+            vim.api.nvim_buf_set_lines(0, row, row, false, {parent})
+            vim.api.nvim_win_set_cursor(0, {row + 1, #parent})
+            return
+          end
           return vim.api.nvim_feedkeys(
             vim.api.nvim_replace_termcodes("<CR>", true, false, true),
             "n",
@@ -100,7 +118,8 @@ in
         -- Create new task item at same level with unchecked checkbox
         local new_bullet
         if is_asterisk then
-          new_bullet = stars .. " ( ) "
+          local prefix = (task_content == "TODO") and (stars .. "*") or stars
+          new_bullet = prefix .. " ( ) "
         else
           new_bullet = indent .. "- ( ) "
         end
@@ -153,6 +172,13 @@ in
             vim.cmd("startinsert!")
             return
           end
+          local parent = find_parent_bullet(row)
+          if parent then
+            vim.api.nvim_buf_set_lines(0, row, row, false, {parent})
+            vim.api.nvim_win_set_cursor(0, {row + 1, #parent})
+            vim.cmd("startinsert!")
+            return
+          end
           return vim.api.nvim_feedkeys("o", "n", false)
         end
 
@@ -160,7 +186,9 @@ in
         local is_asterisk = stars ~= nil
         local new_bullet
         if is_asterisk then
-          new_bullet = stars .. " ( ) "
+          local content = star_content or ""
+          local prefix = (content == "TODO") and (stars .. "*") or stars
+          new_bullet = prefix .. " ( ) "
         else
           new_bullet = indent .. "- ( ) "
         end
