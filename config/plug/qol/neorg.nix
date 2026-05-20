@@ -4,7 +4,9 @@
     self'.packages.neorg-interim-ls
   ];
 
-  extraConfigLua = "";
+  extraConfigLua = ''
+    vim.tbl_islist = vim.tbl_islist or vim.islist
+  '';
 
   plugins.neorg = {
     enable = true;
