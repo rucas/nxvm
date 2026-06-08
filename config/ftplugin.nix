@@ -291,20 +291,46 @@ in
         return false, false, 0
       end
 
-      local function get_task_end_line(start_line)
+      local function get_task_end_line(start_line, task_level, is_dash)
         local total_lines = vim.api.nvim_buf_line_count(0)
         local current = start_line
 
         while current < total_lines do
           local next_line = vim.api.nvim_buf_get_lines(0, current + 1, current + 2, false)[1]
-          if not next_line then
+          if not next_line or next_line:match("^%s*$") then
             break
           end
-          -- Continuation: line starts with whitespace and isn't a new task or heading
-          if next_line:match("^%s+%S") and not next_line:match("^%s*%*") and not next_line:match("^%s*%-%s*%b()") then
-            current = current + 1
+
+          if is_dash then
+            local child_indent = next_line:match("^(%s*)%-%s*%b()")
+            if child_indent then
+              if #child_indent > task_level then
+                current = current + 1
+              else
+                break
+              end
+            elseif next_line:match("^%s*%*") then
+              break
+            elseif next_line:match("^%s+%S") then
+              current = current + 1
+            else
+              break
+            end
           else
-            break
+            local child_stars = next_line:match("^(%*+)")
+            if child_stars then
+              if #child_stars > task_level then
+                current = current + 1
+              else
+                break
+              end
+            elseif next_line:match("^%s*%-%s*%b()") then
+              current = current + 1
+            elseif next_line:match("^%s+%S") then
+              current = current + 1
+            else
+              break
+            end
           end
         end
 
@@ -372,8 +398,8 @@ in
           return
         end
 
-        -- Find task boundaries (including continuations)
-        local task_end = get_task_end_line(current_line_num - 1)
+        -- Find task boundaries (including subtasks)
+        local task_end = get_task_end_line(current_line_num - 1, level, is_dash)
         local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
 
         -- Find where to move the task
@@ -421,7 +447,7 @@ in
         local level = is_asterisk and #stars or #indent
 
         -- Find task boundaries before modifying the buffer
-        local task_end = get_task_end_line(current_line_num - 1)
+        local task_end = get_task_end_line(current_line_num - 1, level, not is_asterisk)
         local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
 
         -- Mark as done in memory
@@ -432,6 +458,11 @@ in
           new_line = indent .. "- (x) " .. task_content
         end
         task_lines[1] = new_line
+
+        for i = 2, #task_lines do
+          task_lines[i] = task_lines[i]:gsub("^(%*+%s*)%b()", "%1(x)")
+          task_lines[i] = task_lines[i]:gsub("^(%s*%-%s*)%b()", "%1(x)")
+        end
 
         -- Find where to move the task (bottom of current list)
         local destination = find_list_bottom(current_line_num, level, not is_asterisk)
@@ -540,7 +571,7 @@ in
         end
 
         -- Find task boundaries before modifying the buffer
-        local task_end = get_task_end_line(current_line_num - 1)
+        local task_end = get_task_end_line(current_line_num - 1, level, not is_asterisk)
         local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
 
         -- Mark as important in memory
