@@ -274,17 +274,32 @@ in
         desc = "Create neorg task above"
       })
 
+      -- Replace the status character of a checkbox while preserving any
+      -- extension metadata (e.g. a due date "|@ 2026-06-30").
+      -- ("( |@ 2026-06-30)", "x") -> "(x|@ 2026-06-30)"
+      -- ("( )", "x") -> "(x)"
+      local function set_checkbox_status(checkbox, status_char)
+        local inner = checkbox:sub(2, -2)
+        local extension = inner:sub(2)
+        return "(" .. status_char .. extension .. ")"
+      end
+
+      -- Status character of a checkbox, e.g. "(x)" -> "x", "( |@ ...)" -> " "
+      local function checkbox_status(checkbox)
+        return checkbox:sub(2, 2)
+      end
+
       -- Auto-move completed tasks to bottom of list
       local function is_completed_task(line)
         -- Match asterisk format: "*** (x) task"
         local stars, checkbox = line:match("^(%*+)%s*(%b())")
-        if stars and checkbox == "(x)" then
+        if stars and checkbox_status(checkbox) == "x" then
           return true, false, #stars
         end
 
         -- Match dash format: "  - (x) task"
         local indent, dash_checkbox = line:match("^(%s*)%-%s*(%b())")
-        if indent and dash_checkbox == "(x)" then
+        if indent and checkbox_status(dash_checkbox) == "x" then
           return true, true, #indent
         end
 
@@ -450,18 +465,22 @@ in
         local task_end = get_task_end_line(current_line_num - 1, level, not is_asterisk)
         local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
 
-        -- Mark as done in memory
+        -- Mark as done in memory, preserving any due-date extension
+        local new_checkbox = set_checkbox_status(checkbox, "x")
         local new_line
         if is_asterisk then
-          new_line = stars .. " (x) " .. task_content
+          new_line = stars .. " " .. new_checkbox .. " " .. task_content
         else
-          new_line = indent .. "- (x) " .. task_content
+          new_line = indent .. "- " .. new_checkbox .. " " .. task_content
         end
         task_lines[1] = new_line
 
+        local function mark_subtask_done(prefix, subtask_checkbox)
+          return prefix .. set_checkbox_status(subtask_checkbox, "x")
+        end
         for i = 2, #task_lines do
-          task_lines[i] = task_lines[i]:gsub("^(%*+%s*)%b()", "%1(x)")
-          task_lines[i] = task_lines[i]:gsub("^(%s*%-%s*)%b()", "%1(x)")
+          task_lines[i] = task_lines[i]:gsub("^(%*+%s*)(%b())", mark_subtask_done)
+          task_lines[i] = task_lines[i]:gsub("^(%s*%-%s*)(%b())", mark_subtask_done)
         end
 
         -- Find where to move the task (bottom of current list)
@@ -559,12 +578,13 @@ in
         local level = is_asterisk and #stars or #indent
 
         -- If already marked as important, toggle back to unchecked and don't move
-        if checkbox == "(!)" then
+        if checkbox_status(checkbox) == "!" then
+          local new_checkbox = set_checkbox_status(checkbox, " ")
           local new_line
           if is_asterisk then
-            new_line = stars .. " ( ) " .. task_content
+            new_line = stars .. " " .. new_checkbox .. " " .. task_content
           else
-            new_line = indent .. "- ( ) " .. task_content
+            new_line = indent .. "- " .. new_checkbox .. " " .. task_content
           end
           vim.api.nvim_set_current_line(new_line)
           return
@@ -574,12 +594,13 @@ in
         local task_end = get_task_end_line(current_line_num - 1, level, not is_asterisk)
         local task_lines = vim.api.nvim_buf_get_lines(0, current_line_num - 1, task_end + 1, false)
 
-        -- Mark as important in memory
+        -- Mark as important in memory, preserving any due-date extension
+        local new_checkbox = set_checkbox_status(checkbox, "!")
         local new_line
         if is_asterisk then
-          new_line = stars .. " (!) " .. task_content
+          new_line = stars .. " " .. new_checkbox .. " " .. task_content
         else
-          new_line = indent .. "- (!) " .. task_content
+          new_line = indent .. "- " .. new_checkbox .. " " .. task_content
         end
         task_lines[1] = new_line
 
@@ -623,12 +644,13 @@ in
         local is_asterisk = stars ~= nil
         local task_content = is_asterisk and star_content or dash_content
 
-        -- Set the new state
+        -- Set the new state, preserving any due-date extension
+        local new_checkbox = set_checkbox_status(checkbox, state_marker:sub(2, 2))
         local new_line
         if is_asterisk then
-          new_line = stars .. " " .. state_marker .. " " .. task_content
+          new_line = stars .. " " .. new_checkbox .. " " .. task_content
         else
-          new_line = indent .. "- " .. state_marker .. " " .. task_content
+          new_line = indent .. "- " .. new_checkbox .. " " .. task_content
         end
         vim.api.nvim_set_current_line(new_line)
       end
