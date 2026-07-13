@@ -104,9 +104,6 @@
             module = {
               imports = [ ./config ];
               package = neovim-nightly-no-check;
-              # pandoc on darwin is built without Lua support, which breaks the
-              # nixvim options manpage build (`pandoc --lua-filter`).
-              enableMan = false;
             };
             extraSpecialArgs = {
               inherit inputs;
