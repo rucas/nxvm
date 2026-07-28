@@ -211,6 +211,17 @@ in
         "@neorg.todo_items.done.norg" = {
           italic = false;
         };
+
+        "@neorg.links.location.url" = {
+          fg = colors.base0D;
+          bg = colors.base02;
+          bold = true;
+        };
+        "@neorg.links.description" = {
+          fg = colors.base0D;
+          bg = colors.base02;
+          bold = true;
+        };
       };
     };
   };
