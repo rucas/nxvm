@@ -6,6 +6,31 @@
 
   extraConfigLua = ''
     vim.tbl_islist = vim.tbl_islist or vim.islist
+
+    do
+      local orig_open = vim.ui.open
+      vim.ui.open = function(uri, ...)
+        local session = type(uri) == "string" and uri:match("^tmux:(.+)$")
+        if not session then
+          return orig_open(uri, ...)
+        end
+        vim.system({ "tmux", "has-session", "-t", "=" .. session }, {}, function(res)
+          if res.code ~= 0 then
+            vim.schedule(function()
+              vim.notify("tmux: no session '" .. session .. "'", vim.log.levels.ERROR)
+            end)
+            return
+          end
+          vim.system({
+            "sh", "-c",
+            [[if [ -n "$TMUX" ]; then tmux switch-client -t "$1"; ]]
+              .. [[else tmux attach -t "$1"; fi]],
+            "sh", session,
+          })
+        end)
+        return true
+      end
+    end
   '';
 
   plugins.neorg = {
