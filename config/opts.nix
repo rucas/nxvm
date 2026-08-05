@@ -138,8 +138,9 @@
       foldlevelstart = 99;
       foldenable = true;
 
-      # Reduce which-key timeout to 10ms
-      timeoutlen = 10;
+      # Not a which-key setting: its popup is governed by its own `delay` (200ms).
+      # Only affects mappings that are a prefix of a longer one, e.g. gc -> gcc.
+      timeoutlen = 300;
 
       # Decrease updatetime
       updatetime = 250; # faster completion (4000ms default)

@@ -30,12 +30,6 @@
 
     {
       mode = "n";
-      key = "<leader>e";
-      action = "+explore";
-    }
-
-    {
-      mode = "n";
       key = "<leader>et";
       action = "<cmd>Neotree toggle<cr>";
       options = {
@@ -51,12 +45,6 @@
         desc = "Toggle Undotree";
       };
     }
-    {
-      mode = "n";
-      key = "<leader>f";
-      action = "+find/file";
-    }
-
     {
       mode = "n";
       key = "<leader>fb";
@@ -102,53 +90,9 @@
       };
     }
 
-    #{
-    #  mode = "n";
-    #  key = "<leader>d";
-    #  action = "+debug";
-    #}
-
-    {
-      mode = "n";
-      key = "<leader>g";
-      action = "+git/goto";
-    }
-
-    #{
-    #  mode = "n";
-    #  key = "<leader>s";
-    #  action = "+search";
-    #}
-
-    {
-      mode = "n";
-      key = "<leader>q";
-      action = "+quit/session";
-    }
-
-    {
-      mode = "n";
-      key = "<leader>w";
-      action = "+windows";
-    }
-
-    {
-      mode = "n";
-      key = "<leader><Tab>";
-      action = "+tabs";
-    }
-
-    #{
-    #  mode = [ "n" "v" ];
-    #  key = "<leader>c";
-    #  action = "+code";
-    #}
-
-    #{
-    #  mode = [ "n" "v" ];
-    #  key = "<leader>t";
-    #  action = "+test";
-    #}
+    # Prefix groups (+debug, +code, +test, ...) belong in plug/utils/whichkey.nix
+    # under settings.spec. Declaring them here as `action = "+name"` emits a real
+    # keymap that types the literal text, which forces 'timeoutlen' down to hide it.
 
     {
       mode = "n";
