@@ -144,16 +144,9 @@
             desc = "Code Actions";
           };
         };
-        diagnostic = {
-          "[d" = {
-            action = "goto_next";
-            desc = "Next Diagnostic";
-          };
-          "]d" = {
-            action = "goto_prev";
-            desc = "Previous Diagnostic";
-          };
-        };
+        # ]d/[d (and ]D/[D) are Neovim defaults and already jump the right way.
+        # The old mappings here were inverted and used vim.diagnostic.goto_next,
+        # which warns via vim.deprecate() in favour of vim.diagnostic.jump().
       };
     };
   };
