@@ -44,18 +44,20 @@
         desc = "Trouble diagnostics toggle (Buffer)";
       };
     }
+    # ]x/[x rather than ]c/[c: the latter are Vim's diff-mode change motions,
+    # which matter here because undotree opens a diff. Pairs with <leader>x.
     {
       mode = "n";
-      key = "[c";
-      action = ":lua require('trouble').next {skip_groups = true, jump = true }<CR>";
+      key = "]x";
+      action = "<cmd>lua require('trouble').next({ skip_groups = true, jump = true })<cr>";
       options = {
         desc = "Trouble next";
       };
     }
     {
       mode = "n";
-      key = "]c";
-      action = ":lua require('trouble').prev {skip_groups = true, jump = true }<CR>";
+      key = "[x";
+      action = "<cmd>lua require('trouble').prev({ skip_groups = true, jump = true })<cr>";
       options = {
         desc = "Trouble prev";
       };
