@@ -8,10 +8,12 @@
         group = "+";
       };
       spec = [
+        # Leaf commands: `desc` comes from the keymap in config/keys.nix.
+        # Only the icon is attached here -- `group` would render them as
+        # empty prefix groups.
         {
           __unkeyed-1 = "<leader>:";
           mode = "n";
-          group = "command history";
           icon = {
             color = "purple";
             icon = " ";
@@ -20,7 +22,6 @@
         {
           __unkeyed-1 = "<leader>/";
           mode = "n";
-          group = "grep";
           icon = {
             color = "purple";
             icon = " ";
