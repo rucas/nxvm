@@ -708,23 +708,58 @@ in
         })
       end)
 
-      local tag_palette = {
-        "${colors.base08}",
-        "${colors.base09}",
-        "${colors.base0A}",
-        "${colors.base0B}",
-        "${colors.base0C}",
-        "${colors.base0D}",
-        "${colors.base0E}",
-        "${colors.base0F}",
+      local TAG_HUE_COUNT = 24
+      local TAG_TONES = {
+        { saturation = 0.58, lightness = 0.70 },
+        { saturation = 0.38, lightness = 0.64 },
+        { saturation = 0.74, lightness = 0.81 },
       }
+      local TAG_SLOT_COUNT = TAG_HUE_COUNT * #TAG_TONES
+      local TAG_PROBE_STRIDE = 7
 
-      local function tag_color(name)
-        local h = 0
-        for i = 1, #name do
-          h = (h * 31 + name:byte(i)) % #tag_palette
+      local function hsl_to_hex(hue, saturation, lightness)
+        local chroma = saturation * math.min(lightness, 1 - lightness)
+        local function channel(offset)
+          local k = (offset + hue / 30) % 12
+          local value = lightness - chroma * math.max(-1, math.min(k - 3, 9 - k, 1))
+          return math.floor(math.max(0, math.min(1, value)) * 255 + 0.5)
         end
-        return tag_palette[h + 1]
+        return string.format("#%02x%02x%02x", channel(0), channel(8), channel(4))
+      end
+
+      local function tag_slot_color(slot)
+        local tone = TAG_TONES[math.floor(slot / TAG_HUE_COUNT) + 1]
+        local hue = (slot % TAG_HUE_COUNT) * (360 / TAG_HUE_COUNT)
+        local yellow_blue_balance = 0.06 * math.cos(math.rad(hue - 60))
+        return hsl_to_hex(hue, tone.saturation, tone.lightness - yellow_blue_balance)
+      end
+
+      local function tag_preferred_slot(name)
+        local h = 5381
+        for i = 1, #name do
+          h = (h * 33 + name:byte(i)) % 16777216
+        end
+        return h % TAG_SLOT_COUNT
+      end
+
+      local function assign_tag_colors(tags)
+        table.sort(tags)
+
+        local taken = {}
+        local colors = {}
+        for _, tag in ipairs(tags) do
+          local preferred = tag_preferred_slot(tag)
+          colors[tag] = tag_slot_color(preferred)
+          for probe = 0, TAG_SLOT_COUNT - 1 do
+            local slot = (preferred + probe * TAG_PROBE_STRIDE) % TAG_SLOT_COUNT
+            if not taken[slot] then
+              taken[slot] = true
+              colors[tag] = tag_slot_color(slot)
+              break
+            end
+          end
+        end
+        return colors
       end
 
       local tag_match_ids = {}
@@ -735,18 +770,22 @@ in
         end
         tag_match_ids = {}
 
+        local tags = {}
         local seen = {}
         for _, line in ipairs(vim.api.nvim_buf_get_lines(0, 0, -1, false)) do
           for tag in line:gmatch("%f[%S]#([%w_][%w_-]*)") do
             if not seen[tag] then
               seen[tag] = true
-              local hl = "NeorgTag_" .. tag:gsub("-", "_")
-              local color = tag_color(tag)
-              vim.api.nvim_set_hl(0, hl, { fg = "${colors.background}", bg = color, bold = true })
-              local id = vim.fn.matchadd(hl, [[\(\s\|^\)\zs#]] .. tag:gsub("%-", "\\-") .. [[\>]])
-              table.insert(tag_match_ids, id)
+              table.insert(tags, tag)
             end
           end
+        end
+
+        for tag, color in pairs(assign_tag_colors(tags)) do
+          local hl = "NeorgTag_" .. tag:gsub("-", "_")
+          vim.api.nvim_set_hl(0, hl, { fg = "${colors.background}", bg = color, bold = true })
+          local id = vim.fn.matchadd(hl, [[\(\s\|^\)\zs#]] .. tag:gsub("%-", "\\-") .. [[\>]])
+          table.insert(tag_match_ids, id)
         end
       end
 
