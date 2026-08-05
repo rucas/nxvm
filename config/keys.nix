@@ -163,45 +163,8 @@
       };
     }
 
-    {
-      mode = "n";
-      key = "<C-h>";
-      action = "<C-W>h";
-      options = {
-        silent = true;
-        desc = "Move to left window";
-      };
-    }
-
-    {
-      mode = "n";
-      key = "<C-l>";
-      action = "<C-W>l";
-      options = {
-        silent = true;
-        desc = "Move to right window";
-      };
-    }
-
-    {
-      mode = "n";
-      key = "<C-k>";
-      action = "<C-W>k";
-      options = {
-        silent = true;
-        desc = "Move to top window";
-      };
-    }
-
-    {
-      mode = "n";
-      key = "<C-j>";
-      action = "<C-W>j";
-      options = {
-        silent = true;
-        desc = "Move to bottom window";
-      };
-    }
+    # <C-hjkl> window movement lives in plug/ui/smart-splits.nix so it can hand
+    # off to the surrounding tmux pane at the edge of the window layout.
 
     # Tabs
     {
@@ -240,38 +203,6 @@
       mode = "t";
       key = "<esc>";
       action = "<C-\\><C-n>";
-      options = {
-        silent = true;
-      };
-    }
-    {
-      mode = "t";
-      key = "<C-h>";
-      action = "<cmd>wincmd h<cr>";
-      options = {
-        silent = true;
-      };
-    }
-    {
-      mode = "t";
-      key = "<C-j>";
-      action = "<cmd>wincmd j<cr>";
-      options = {
-        silent = true;
-      };
-    }
-    {
-      mode = "t";
-      key = "<C-k>";
-      action = "<cmd>wincmd k<cr>";
-      options = {
-        silent = true;
-      };
-    }
-    {
-      mode = "t";
-      key = "<C-l>";
-      action = "<cmd>wincmd l<CR>";
       options = {
         silent = true;
       };
