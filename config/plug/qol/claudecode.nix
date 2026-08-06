@@ -6,7 +6,21 @@
     -- Only setup claudecode in interactive environments
     if vim.fn.has('nvim') == 1 and os.getenv('NIX_BUILD_TOP') == nil then
       pcall(function()
-        local setup_opts = {}
+        local setup_opts = {
+          -- Land in the Claude terminal after <leader>as rather than staying
+          -- in the buffer, so a follow-up prompt needs no extra <leader>af.
+          focus_after_send = true,
+          terminal = {
+            -- Spawn at the git root, not Neovim's cwd: opening nvim from a
+            -- subdirectory would otherwise hand Claude only that subtree.
+            git_repo_cwd = true,
+          },
+          diff_opts = {
+            -- neo-tree is pinned at 40 columns and the Claude split takes
+            -- another 30%, so a vertical diff on top leaves too little room.
+            open_in_new_tab = true,
+          },
+        }
         require('claudecode').setup(setup_opts)
       end)
     end
