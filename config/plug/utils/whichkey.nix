@@ -39,6 +39,27 @@
             icon = "󰚩 ";
           };
         }
+        # Documentation-only entries. which-key installs no trigger in terminal
+        # mode (default triggers are "nxso"), so these are never popped up by
+        # typing -- they exist so `<leader>a?` / `:WhichKey t` can list them.
+        {
+          __unkeyed-1 = "<Esc><Esc>";
+          mode = "t";
+          desc = "Normal mode (snacks/Claude: single <Esc> goes through)";
+          icon = {
+            color = "yellow";
+            icon = "󰊷 ";
+          };
+        }
+        {
+          __unkeyed-1 = "<C-\\><C-n>";
+          mode = "t";
+          desc = "Normal mode (works in any terminal)";
+          icon = {
+            color = "yellow";
+            icon = "󰊷 ";
+          };
+        }
         {
           __unkeyed-1 = "<leader>c";
           mode = "n";

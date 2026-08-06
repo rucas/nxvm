@@ -128,5 +128,14 @@
         desc = "Status";
       };
     }
+    {
+      mode = "n";
+      key = "<leader>a?";
+      action = "<cmd>WhichKey t<cr>";
+      options = {
+        silent = true;
+        desc = "Terminal-mode keys";
+      };
+    }
   ];
 }
