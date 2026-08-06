@@ -28,6 +28,18 @@
           };
         }
         {
+          __unkeyed-1 = "<leader>a";
+          mode = [
+            "n"
+            "v"
+          ];
+          group = "+ai [claude]";
+          icon = {
+            color = "green";
+            icon = "󰚩 ";
+          };
+        }
+        {
           __unkeyed-1 = "<leader>c";
           mode = "n";
           group = "+code [LSP]";
