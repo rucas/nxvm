@@ -148,9 +148,24 @@
         spacing = 4;
       };
       win = {
-        height = {
-          max = 44;
-        };
+        # Top-right rather than the helix preset's bottom-right. The bottom is
+        # where the global statusline and any horizontal split separator sit,
+        # and the border never lined up cleanly against them.
+        #
+        # Layout.dim treats |v| < 1 as a fraction of the parent, negatives as
+        # an offset from the far edge, and clamps with min(parent, v). So:
+        #   row = 0    -> flush top
+        #   col = 9999 -> clamped to parent, i.e. flush right (helix's col = -1
+        #                 resolves to parent - 1 and leaves a dead column for a
+        #                 window separator to show through)
+        row = 0;
+        col = 9999;
+        # Do not re-anchor the popup when the cursor falls inside it: that path
+        # recomputes height without accounting for the border or cmdheight.
+        no_overlap = false;
+        # height intentionally unset: the helix preset's max = 0.75 is a
+        # fraction of the screen, whereas any value >= 1 is read as an
+        # absolute line count.
         padding = [
           1
           1
