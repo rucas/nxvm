@@ -78,7 +78,8 @@ in
               vim.api.nvim_set_current_line("")
               return
             end
-            local new_bullet = heading_stars .. " "
+            local prefix = (heading_content == "INBOX") and (heading_stars .. "*") or heading_stars
+            local new_bullet = prefix .. " "
             vim.api.nvim_buf_set_lines(0, row, row, false, {new_bullet})
             vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
             return
@@ -160,7 +161,8 @@ in
         -- Not a task item, check for non-task list items
         if not checkbox then
           if heading_stars then
-            local new_bullet = heading_stars .. " "
+            local prefix = (heading_content == "INBOX") and (heading_stars .. "*") or heading_stars
+            local new_bullet = prefix .. " "
             vim.api.nvim_buf_set_lines(0, row, row, false, {new_bullet})
             vim.api.nvim_win_set_cursor(0, {row + 1, #new_bullet})
             vim.cmd("startinsert!")
