@@ -89,7 +89,26 @@
         let
           pkgs = import inputs.nixpkgs {
             inherit system;
-            overlays = [ neorg-overlay.overlays.default ];
+            overlays = [
+              neorg-overlay.overlays.default
+              # core.tempus builds `valid_months` / `valid_weekdays` keyed by
+              # name, then reads index [1], which is always nil -- so parse_date
+              # throws on any date containing a month or weekday name, e.g.
+              # pressing <CR> on a date link. Upstream had this right at 790b044
+              # and regressed it; neorg main (d4dd897) is still broken, so there
+              # is nothing to bump to. Drop once upstream restores `next()`.
+              (_: prev: {
+                vimPlugins = prev.vimPlugins // {
+                  neorg = prev.vimPlugins.neorg.overrideAttrs (old: {
+                    postPatch = (old.postPatch or "") + ''
+                      substituteInPlace lua/neorg/modules/core/tempus/module.lua \
+                        --replace-fail 'unpack(valid_months[1])' 'next(valid_months)' \
+                        --replace-fail 'unpack(valid_weekdays[1])' 'next(valid_weekdays)'
+                    '';
+                  });
+                };
+              })
+            ];
             config.allowUnfree = true;
           };
           neovim-nightly-no-check =
