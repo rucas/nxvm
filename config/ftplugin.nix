@@ -708,6 +708,38 @@ in
           silent = true,
           desc = "Mark task as ambiguous (?)"
         })
+
+        -- which-key installs its <Space> trigger before FileType norg fires,
+        -- so neorg's mapcheck() guard reports a conflict and silently skips
+        -- every <LocalLeader> key in its norg preset (see :checkhealth neorg).
+        -- The task keys are re-bound above; these are the rest, mapped to the
+        -- same <Plug> targets neorg would have used.
+        for _, keybind in ipairs({
+          { "<LocalLeader>lt", "<Plug>(neorg.pivot.list.toggle)", "Toggle (un)ordered list" },
+          { "<LocalLeader>li", "<Plug>(neorg.pivot.list.invert)", "Invert (un)ordered list" },
+          { "<LocalLeader>id", "<Plug>(neorg.tempus.insert-date)", "Insert date" },
+          { "<LocalLeader>cm", "<Plug>(neorg.looking-glass.magnify-code-block)", "Magnify code block" },
+        }) do
+          vim.keymap.set("n", keybind[1], keybind[2], {
+            buffer = 0,
+            silent = true,
+            desc = keybind[3],
+          })
+        end
+
+        -- neorg sets a `desc` on every keybind it installs, so which-key
+        -- already labels the leaves. Only the prefixes need naming, and only
+        -- for norg buffers -- neorg binds these per-buffer on FileType norg.
+        -- <LocalLeader>cm (magnify code block) is deliberately absent: with
+        -- maplocalleader == mapleader it lands under the global "+code [LSP]".
+        local ok, wk = pcall(require, "which-key")
+        if ok then
+          wk.add({
+            { "<LocalLeader>t", group = "+task", buffer = 0, icon = { color = "green", icon = "󰄲 " } },
+            { "<LocalLeader>l", group = "+list", buffer = 0, icon = { color = "blue", icon = "󰉹 " } },
+            { "<LocalLeader>i", group = "+insert", buffer = 0, icon = { color = "yellow", icon = "󰃭 " } },
+          })
+        end
       end)
 
       local TAG_HUE_COUNT = 24

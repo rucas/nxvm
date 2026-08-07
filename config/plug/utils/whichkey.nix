@@ -96,6 +96,17 @@
             icon = "󰊢 ";
           };
         }
+        # neorg binds <LocalLeader>nn in every buffer, not just norg ones, so
+        # its group belongs here rather than in the norg ftplugin.
+        {
+          __unkeyed-1 = "<LocalLeader>n";
+          mode = "n";
+          group = "+notes [neorg]";
+          icon = {
+            color = "green";
+            icon = "󰎚 ";
+          };
+        }
         {
           __unkeyed-1 = "<leader>q";
           mode = "n";
