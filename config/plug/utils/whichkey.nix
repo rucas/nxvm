@@ -96,12 +96,13 @@
             icon = "󰊢 ";
           };
         }
-        # neorg binds <LocalLeader>nn in every buffer, not just norg ones, so
-        # its group belongs here rather than in the norg ftplugin.
+        # Root for every norg key. It lives here rather than in the norg
+        # ftplugin because neorg binds <LocalLeader>nn in every buffer, not
+        # just norg ones.
         {
           __unkeyed-1 = "<LocalLeader>n";
           mode = "n";
-          group = "+notes [neorg]";
+          group = "+neorg";
           icon = {
             color = "green";
             icon = "󰎚 ";

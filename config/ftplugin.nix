@@ -804,96 +804,55 @@ in
       -- Keybindings for task state changes with auto-move
       -- Wait for neorg to load, then override its keybinds with auto-move versions
       vim.schedule(function()
-        vim.keymap.set("n", "<LocalLeader>td", mark_done_and_move_down, {
-          buffer = 0,
-          silent = true,
-          desc = "Mark task as done (x) and move to bottom"
-        })
+        -- Everything norg hangs off <LocalLeader>n. maplocalleader is <Space>,
+        -- so a bare <LocalLeader>c would land inside the global "+code [LSP]"
+        -- group and <LocalLeader>t/l/i would squat on top-level leader keys
+        -- that only exist in norg buffers.
+        local function map(suffix, rhs, desc)
+          vim.keymap.set("n", "<LocalLeader>n" .. suffix, rhs, {
+            buffer = 0,
+            silent = true,
+            desc = desc,
+          })
+        end
 
-        vim.keymap.set("n", "<LocalLeader>ti", mark_important_and_move_up, {
-          buffer = 0,
-          silent = true,
-          desc = "Mark task as important (!) and move to top"
-        })
+        map("td", mark_done_and_move_down, "Mark task as done (x) and move to bottom")
+        map("ti", mark_important_and_move_up, "Mark task as important (!) and move to top")
 
         -- Other task states (without auto-move)
-        vim.keymap.set("n", "<LocalLeader>tu", function() set_task_state("( )", "undone") end, {
-          buffer = 0,
-          silent = true,
-          desc = "Mark task as undone ( )"
-        })
+        for _, state in ipairs({
+          { "tu", "( )", "undone" },
+          { "tp", "(-)", "pending" },
+          { "th", "(=)", "on hold" },
+          { "tc", "(_)", "cancelled" },
+          { "tr", "(+)", "recurring" },
+          { "ta", "(?)", "ambiguous" },
+        }) do
+          local suffix, marker, name = state[1], state[2], state[3]
+          map(suffix, function() set_task_state(marker, name) end,
+            ("Mark task as %s %s"):format(name, marker))
+        end
 
-        vim.keymap.set("n", "<LocalLeader>tp", function() set_task_state("(-)", "pending") end, {
-          buffer = 0,
-          silent = true,
-          desc = "Mark task as pending (-)"
-        })
-
-        vim.keymap.set("n", "<LocalLeader>th", function() set_task_state("(=)", "on hold") end, {
-          buffer = 0,
-          silent = true,
-          desc = "Mark task as on hold (=)"
-        })
-
-        vim.keymap.set("n", "<LocalLeader>tc", function() set_task_state("(_)", "cancelled") end, {
-          buffer = 0,
-          silent = true,
-          desc = "Mark task as cancelled (_)"
-        })
-
-        vim.keymap.set("n", "<LocalLeader>tr", function() set_task_state("(+)", "recurring") end, {
-          buffer = 0,
-          silent = true,
-          desc = "Mark task as recurring (+)"
-        })
-
-        vim.keymap.set("n", "<LocalLeader>ta", function() set_task_state("(?)", "ambiguous") end, {
-          buffer = 0,
-          silent = true,
-          desc = "Mark task as ambiguous (?)"
-        })
-
-        vim.keymap.set("n", "<LocalLeader>tm", move_inbox_item_to_today, {
-          buffer = 0,
-          silent = true,
-          desc = "Move INBOX item to today's TODO"
-        })
-
-        vim.keymap.set("n", "<LocalLeader>tb", move_task_to_inbox, {
-          buffer = 0,
-          silent = true,
-          desc = "Move task back to this week's INBOX"
-        })
+        map("m", move_inbox_item_to_today, "Move INBOX item to today's TODO")
+        map("b", move_task_to_inbox, "Move task back to this week's INBOX")
 
         -- which-key installs its <Space> trigger before FileType norg fires,
         -- so neorg's mapcheck() guard reports a conflict and silently skips
         -- every <LocalLeader> key in its norg preset (see :checkhealth neorg).
-        -- The task keys are re-bound above; these are the rest, mapped to the
-        -- same <Plug> targets neorg would have used.
-        for _, keybind in ipairs({
-          { "<LocalLeader>lt", "<Plug>(neorg.pivot.list.toggle)", "Toggle (un)ordered list" },
-          { "<LocalLeader>li", "<Plug>(neorg.pivot.list.invert)", "Invert (un)ordered list" },
-          { "<LocalLeader>id", "<Plug>(neorg.tempus.insert-date)", "Insert date" },
-          { "<LocalLeader>cm", "<Plug>(neorg.looking-glass.magnify-code-block)", "Magnify code block" },
-        }) do
-          vim.keymap.set("n", keybind[1], keybind[2], {
-            buffer = 0,
-            silent = true,
-            desc = keybind[3],
-          })
-        end
+        -- These are neorg's own actions, re-homed under the same root.
+        map("lt", "<Plug>(neorg.pivot.list.toggle)", "Toggle (un)ordered list")
+        map("li", "<Plug>(neorg.pivot.list.invert)", "Invert (un)ordered list")
+        map("d", "<Plug>(neorg.tempus.insert-date)", "Insert date")
+        map("c", "<Plug>(neorg.looking-glass.magnify-code-block)", "Magnify code block")
 
         -- neorg sets a `desc` on every keybind it installs, so which-key
         -- already labels the leaves. Only the prefixes need naming, and only
         -- for norg buffers -- neorg binds these per-buffer on FileType norg.
-        -- <LocalLeader>cm (magnify code block) is deliberately absent: with
-        -- maplocalleader == mapleader it lands under the global "+code [LSP]".
         local ok, wk = pcall(require, "which-key")
         if ok then
           wk.add({
-            { "<LocalLeader>t", group = "+task", buffer = 0, icon = { color = "green", icon = "󰄲 " } },
-            { "<LocalLeader>l", group = "+list", buffer = 0, icon = { color = "blue", icon = "󰉹 " } },
-            { "<LocalLeader>i", group = "+insert", buffer = 0, icon = { color = "yellow", icon = "󰃭 " } },
+            { "<LocalLeader>nt", group = "+task", buffer = 0, icon = { color = "green", icon = "󰄲 " } },
+            { "<LocalLeader>nl", group = "+list", buffer = 0, icon = { color = "blue", icon = "󰉹 " } },
           })
         end
       end)
