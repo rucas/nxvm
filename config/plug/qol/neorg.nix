@@ -4,6 +4,151 @@
     self'.packages.neorg-interim-ls
   ];
 
+  # Shared by the norg ftplugin (for keymaps) and the neorgcmd module below.
+  # It cannot live in the ftplugin: those are per-buffer closures, whereas a
+  # neorg module is loaded once and globally.
+  extraFiles."lua/ledger.lua".text = ''
+    local M = {}
+
+    -- Heading depth of a line, e.g. "*** NOTES" -> 3. nil for body lines.
+    local function heading_level(line)
+      local stars = line and line:match("^(%*+)%s")
+      return stars and #stars
+    end
+
+    local function fail(msg)
+      vim.notify(msg, vim.log.levels.ERROR)
+    end
+
+    -- Nearest heading at or above `depth`, walking up from `row` so that body
+    -- and child lines resolve to the item that owns them. nil unless that
+    -- heading sits at exactly `depth`.
+    local function owning_heading(lines, row, depth)
+      for i = row, 1, -1 do
+        local level = heading_level(lines[i])
+        if level and level <= depth then
+          return level == depth and i or nil
+        end
+      end
+    end
+
+    -- Last line of the block owned by the heading at `start`, i.e. everything
+    -- up to the next heading that is not nested inside it.
+    local function block_end(lines, start, depth)
+      for i = start + 1, #lines do
+        local level = heading_level(lines[i])
+        if level and level <= depth then
+          return i - 1
+        end
+      end
+      return #lines
+    end
+
+    -- Heading line of the section enclosing `row`, searching up for `depth`
+    -- and then down for the first child matching `pattern`.
+    local function child_heading(lines, from, pattern)
+      local parent = heading_level(lines[from])
+      for i = from + 1, #lines do
+        local level = heading_level(lines[i])
+        if level and level <= parent then
+          return nil
+        end
+        if lines[i]:match(pattern) then
+          return i
+        end
+      end
+    end
+
+    -- Text of a heading with its stars and any checkbox stripped.
+    local function heading_text(line)
+      local text = line:match("^%*+%s*(.-)%s*$")
+      local checkbox = text:match("^%b()")
+      return checkbox and (text:sub(#checkbox + 1):gsub("^%s*", "")) or text, checkbox
+    end
+
+    -- Cut `first..last` and re-insert `block` directly below `anchor`, which
+    -- is a line number from before the cut.
+    local function move_block(first, last, anchor, block)
+      vim.api.nvim_buf_set_lines(0, first - 1, last, false, {})
+      local insert_at = anchor > last and (anchor - (last - first + 1)) or anchor
+      vim.api.nvim_buf_set_lines(0, insert_at, insert_at, false, block)
+      vim.api.nvim_win_set_cursor(0, { insert_at + 1, 0 })
+    end
+
+    -- Move the "*** item" under the cursor out of its "** INBOX" and into
+    -- the "*** ( ) TODO" list of the "** <DAY> <today>" section, as a
+    -- "**** ( ) item" at the top of that list.
+    function M.inbox_to_today()
+      local row = vim.api.nvim_win_get_cursor(0)[1]
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+      local item_start = owning_heading(lines, row, 3)
+      local inbox = item_start and owning_heading(lines, item_start - 1, 2)
+      if not inbox or not lines[inbox]:match("^%*%*%s+INBOX%s*$") then
+        return fail("Cursor is not on an INBOX item")
+      end
+
+      local today = os.date("%Y-%m-%d")
+      local day_line
+      for i = 1, #lines do
+        if heading_level(lines[i]) == 2 and lines[i]:match(vim.pesc(today) .. "%s*$") then
+          day_line = i
+          break
+        end
+      end
+      if not day_line then
+        return fail("No section for " .. today)
+      end
+
+      local todo_line = child_heading(lines, day_line, "^%*%*%*%s*%b()%s*TODO%s*$")
+      if not todo_line then
+        return fail("No TODO list under " .. today)
+      end
+
+      local item_end = block_end(lines, item_start, 3)
+      local block = vim.list_slice(lines, item_start, item_end)
+      local text, checkbox = heading_text(block[1])
+      block[1] = "**** " .. (checkbox or "( )") .. " " .. text
+      -- The item gained a level, so any headings it owns gain one too.
+      for i = 2, #block do
+        block[i] = block[i]:gsub("^(%*+)%s", "%1* ")
+      end
+
+      move_block(item_start, item_end, todo_line, block)
+    end
+
+    -- The inverse: move the "**** (x) task" under the cursor out of its day's
+    -- TODO list and back to the top of that week's "** INBOX", as a plain
+    -- "*** task". INBOX items carry no checkbox, so the state is dropped.
+    function M.task_to_inbox()
+      local row = vim.api.nvim_win_get_cursor(0)[1]
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+      local task_start = owning_heading(lines, row, 4)
+      local todo_line = task_start and owning_heading(lines, task_start - 1, 3)
+      if not todo_line or not lines[todo_line]:match("^%*%*%*%s*%b()%s*TODO%s*$") then
+        return fail("Cursor is not on a task in a TODO list")
+      end
+
+      local week_line = owning_heading(lines, todo_line - 1, 1)
+      local inbox_line = week_line and child_heading(lines, week_line, "^%*%*%s+INBOX%s*$")
+      if not inbox_line then
+        return fail("No INBOX in this week")
+      end
+
+      local task_end = block_end(lines, task_start, 4)
+      local block = vim.list_slice(lines, task_start, task_end)
+      block[1] = "*** " .. heading_text(block[1])
+      for i = 2, #block do
+        block[i] = block[i]:gsub("^%*(%*+%s)", "%1")
+      end
+
+      move_block(task_start, task_end, inbox_line, block)
+    end
+
+    return M
+  '';
+
   extraConfigLua = ''
     vim.tbl_islist = vim.tbl_islist or vim.islist
 
@@ -31,6 +176,52 @@
         return true
       end
     end
+
+    -- ":Neorg inbox today" / ":Neorg inbox back". neorg dispatches commands as
+    -- broadcast events rather than callbacks, so this has to be a real module.
+    -- Scheduled because neorg.setup() runs later in this same init.
+    vim.schedule(function()
+      local modules = require("neorg.core").modules
+      if modules.is_module_loaded("external.ledger") then
+        return
+      end
+
+      local ledger = modules.create("external.ledger")
+
+      ledger.load = function()
+        modules.await("core.neorgcmd", function(neorgcmd)
+          neorgcmd.add_commands_from_table({
+            inbox = {
+              min_args = 1,
+              max_args = 1,
+              condition = "norg",
+              subcommands = {
+                today = { args = 0, name = "ledger.inbox.today" },
+                back = { args = 0, name = "ledger.inbox.back" },
+              },
+            },
+          })
+        end)
+      end
+
+      ledger.events.subscribed = {
+        ["core.neorgcmd"] = {
+          ["ledger.inbox.today"] = true,
+          ["ledger.inbox.back"] = true,
+        },
+      }
+
+      ledger.on_event = function(event)
+        local actions = require("ledger")
+        if event.split_type[2] == "ledger.inbox.today" then
+          actions.inbox_to_today()
+        elseif event.split_type[2] == "ledger.inbox.back" then
+          actions.task_to_inbox()
+        end
+      end
+
+      modules.load_module_from_table(ledger)
+    end)
   '';
 
   plugins.neorg = {
