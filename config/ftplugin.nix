@@ -693,6 +693,7 @@ in
         end
 
         map("m", ledger.inbox_to_today, "Move INBOX item to today's TODO")
+        map("s", ledger.inbox_to_picked_date, "Schedule INBOX item (calendar)")
         map("b", ledger.task_to_inbox, "Move task back to this week's INBOX")
 
         -- which-key installs its <Space> trigger before FileType norg fires,

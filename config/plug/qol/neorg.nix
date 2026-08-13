@@ -68,19 +68,24 @@
 
     -- Cut `first..last` and re-insert `block` directly below `anchor`, which
     -- is a line number from before the cut.
-    local function move_block(first, last, anchor, block)
-      vim.api.nvim_buf_set_lines(0, first - 1, last, false, {})
+    local function move_block(buf, first, last, anchor, block)
+      vim.api.nvim_buf_set_lines(buf, first - 1, last, false, {})
       local insert_at = anchor > last and (anchor - (last - first + 1)) or anchor
-      vim.api.nvim_buf_set_lines(0, insert_at, insert_at, false, block)
-      vim.api.nvim_win_set_cursor(0, { insert_at + 1, 0 })
+      vim.api.nvim_buf_set_lines(buf, insert_at, insert_at, false, block)
+      local win = vim.fn.bufwinid(buf)
+      if win ~= -1 then
+        vim.api.nvim_win_set_cursor(win, { insert_at + 1, 0 })
+      end
     end
 
-    -- Move the "*** item" under the cursor out of its "** INBOX" and into
-    -- the "*** ( ) TODO" list of the "** <DAY> <today>" section, as a
-    -- "**** ( ) item" at the top of that list.
-    function M.inbox_to_today()
-      local row = vim.api.nvim_win_get_cursor(0)[1]
-      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    -- Move the "*** item" at `row` out of its "** INBOX" and into the
+    -- "*** ( ) TODO" list of the "** <DAY> <date>" section, as a
+    -- "**** ( ) item" at the top of that list. `date` is "YYYY-MM-DD".
+    --
+    -- buf and row are explicit because the calendar picker resolves them
+    -- before opening, then acts on them asynchronously.
+    local function inbox_item_to_date(buf, row, date)
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 
       local item_start = owning_heading(lines, row, 3)
       local inbox = item_start and owning_heading(lines, item_start - 1, 2)
@@ -88,21 +93,20 @@
         return fail("Cursor is not on an INBOX item")
       end
 
-      local today = os.date("%Y-%m-%d")
       local day_line
       for i = 1, #lines do
-        if heading_level(lines[i]) == 2 and lines[i]:match(vim.pesc(today) .. "%s*$") then
+        if heading_level(lines[i]) == 2 and lines[i]:match(vim.pesc(date) .. "%s*$") then
           day_line = i
           break
         end
       end
       if not day_line then
-        return fail("No section for " .. today)
+        return fail("No section for " .. date .. " in this file")
       end
 
       local todo_line = child_heading(lines, day_line, "^%*%*%*%s*%b()%s*TODO%s*$")
       if not todo_line then
-        return fail("No TODO list under " .. today)
+        return fail("No TODO list under " .. date)
       end
 
       local item_end = block_end(lines, item_start, 3)
@@ -114,15 +118,58 @@
         block[i] = block[i]:gsub("^(%*+)%s", "%1* ")
       end
 
-      move_block(item_start, item_end, todo_line, block)
+      move_block(buf, item_start, item_end, todo_line, block)
+    end
+
+    function M.inbox_to_today()
+      inbox_item_to_date(
+        vim.api.nvim_get_current_buf(),
+        vim.api.nvim_win_get_cursor(0)[1],
+        os.date("%Y-%m-%d")
+      )
+    end
+
+    -- Same, but pick the target day from neorg's calendar. The item is resolved
+    -- up front: create_calendar fires the callback while its own window is
+    -- still current, so nothing may rely on the norg buffer being focused.
+    function M.inbox_to_picked_date()
+      local buf = vim.api.nvim_get_current_buf()
+      local row = vim.api.nvim_win_get_cursor(0)[1]
+
+      local modules = require("neorg.core").modules
+      if not modules.is_module_loaded("core.ui.calendar") then
+        return fail("core.ui.calendar is not loaded")
+      end
+
+      -- Bail before opening the calendar if the cursor is not on an item, so
+      -- the picker is not shown for a move that cannot happen.
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+      local item_start = owning_heading(lines, row, 3)
+      local inbox = item_start and owning_heading(lines, item_start - 1, 2)
+      if not inbox or not lines[inbox]:match("^%*%*%s+INBOX%s*$") then
+        return fail("Cursor is not on an INBOX item")
+      end
+
+      modules.get_module("core.ui.calendar").select_date({
+        -- schedule_wrap: the callback runs before the calendar window closes
+        callback = vim.schedule_wrap(function(picked)
+          if not picked then
+            return
+          end
+          -- Round-trip through os.time so an unnormalised day still resolves.
+          local stamp = os.time({ year = picked.year, month = picked.month, day = picked.day })
+          inbox_item_to_date(buf, row, os.date("%Y-%m-%d", stamp))
+        end),
+      })
     end
 
     -- The inverse: move the "**** (x) task" under the cursor out of its day's
     -- TODO list and back to the top of that week's "** INBOX", as a plain
     -- "*** task". INBOX items carry no checkbox, so the state is dropped.
     function M.task_to_inbox()
+      local buf = vim.api.nvim_get_current_buf()
       local row = vim.api.nvim_win_get_cursor(0)[1]
-      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 
       local task_start = owning_heading(lines, row, 4)
       local todo_line = task_start and owning_heading(lines, task_start - 1, 3)
@@ -143,7 +190,7 @@
         block[i] = block[i]:gsub("^%*(%*+%s)", "%1")
       end
 
-      move_block(task_start, task_end, inbox_line, block)
+      move_block(buf, task_start, task_end, inbox_line, block)
     end
 
     return M
@@ -197,6 +244,7 @@
               condition = "norg",
               subcommands = {
                 today = { args = 0, name = "ledger.inbox.today" },
+                date = { args = 0, name = "ledger.inbox.date" },
                 back = { args = 0, name = "ledger.inbox.back" },
               },
             },
@@ -207,6 +255,7 @@
       ledger.events.subscribed = {
         ["core.neorgcmd"] = {
           ["ledger.inbox.today"] = true,
+          ["ledger.inbox.date"] = true,
           ["ledger.inbox.back"] = true,
         },
       }
@@ -215,6 +264,8 @@
         local actions = require("ledger")
         if event.split_type[2] == "ledger.inbox.today" then
           actions.inbox_to_today()
+        elseif event.split_type[2] == "ledger.inbox.date" then
+          actions.inbox_to_picked_date()
         elseif event.split_type[2] == "ledger.inbox.back" then
           actions.task_to_inbox()
         end
