@@ -692,9 +692,9 @@ in
             ("Mark task as %s %s"):format(name, marker))
         end
 
-        map("m", ledger.inbox_to_today, "Move INBOX item to today's TODO")
-        map("s", ledger.inbox_to_picked_date, "Schedule INBOX item (calendar)")
-        map("b", ledger.task_to_inbox, "Move task back to this week's INBOX")
+        map("it", ledger.inbox_to_today, "Move INBOX item to today's TODO")
+        map("is", ledger.inbox_to_picked_date, "Schedule INBOX item (calendar)")
+        map("ib", ledger.task_to_inbox, "Move task back to this week's INBOX")
 
         -- which-key installs its <Space> trigger before FileType norg fires,
         -- so neorg's mapcheck() guard reports a conflict and silently skips
@@ -712,6 +712,7 @@ in
         if ok then
           wk.add({
             { "<LocalLeader>nt", group = "+task", buffer = 0, icon = { color = "green", icon = "󰄲 " } },
+            { "<LocalLeader>ni", group = "+inbox", buffer = 0, icon = { color = "cyan", icon = "󰇰 " } },
             { "<LocalLeader>nl", group = "+list", buffer = 0, icon = { color = "blue", icon = "󰉹 " } },
           })
         end
