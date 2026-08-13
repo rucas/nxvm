@@ -78,9 +78,58 @@
       end
     end
 
+    -- Line of the "*** ( ) TODO" under the "** <DAY> <date>" section, plus the
+    -- day heading itself. Both nil when the file has no section for that date.
+    local function find_day_todo(lines, date)
+      for i = 1, #lines do
+        if heading_level(lines[i]) == 2 and lines[i]:match(vim.pesc(date) .. "%s*$") then
+          return child_heading(lines, i, "^%*%*%*%s*%b()%s*TODO%s*$"), i
+        end
+      end
+    end
+
+    -- Loaded buffer for the ledger month owning `date`, derived from the source
+    -- file's own path (<root>/<YYYY>/<MM>.norg). Generates the month with
+    -- `ldgr gen month` when it does not exist yet.
+    local function month_buffer(source_buf, date)
+      local src = vim.api.nvim_buf_get_name(source_buf)
+      local root = src:match("^(.*)/%d%d%d%d/%d%d%.norg$")
+      if not root then
+        return fail("Not a <year>/<month>.norg ledger file, cannot resolve sibling months")
+      end
+
+      local year, month = date:match("^(%d%d%d%d)-(%d%d)-")
+      local path = ("%s/%s/%s.norg"):format(root, year, month)
+
+      if not vim.uv.fs_stat(path) then
+        -- `ldgr gen month` redirects over its output file, so it must only ever
+        -- run for a month that is absent -- otherwise it would truncate it.
+        local ldgr = root .. "/scripts/ldgr"
+        if not vim.uv.fs_stat(ldgr) then
+          return fail(("No %s, and no scripts/ldgr to generate it"):format(path))
+        end
+        local res = vim.system(
+          { ldgr, "gen", "month", tostring(tonumber(month)), year },
+          { cwd = root, text = true }
+        ):wait()
+        if res.code ~= 0 or not vim.uv.fs_stat(path) then
+          return fail(("ldgr gen month %s %s failed: %s"):format(
+            tonumber(month), year, vim.trim((res.stderr or "") .. (res.stdout or ""))))
+        end
+        vim.notify("Generated " .. vim.fn.fnamemodify(path, ":~"))
+      end
+
+      local buf = vim.fn.bufadd(path)
+      vim.fn.bufload(buf)
+      return buf, path
+    end
+
     -- Move the "*** item" at `row` out of its "** INBOX" and into the
     -- "*** ( ) TODO" list of the "** <DAY> <date>" section, as a
     -- "**** ( ) item" at the top of that list. `date` is "YYYY-MM-DD".
+    --
+    -- When the date belongs to another month the item crosses into that file,
+    -- which is generated first if it does not exist.
     --
     -- buf and row are explicit because the calendar picker resolves them
     -- before opening, then acts on them asynchronously.
@@ -93,22 +142,6 @@
         return fail("Cursor is not on an INBOX item")
       end
 
-      local day_line
-      for i = 1, #lines do
-        if heading_level(lines[i]) == 2 and lines[i]:match(vim.pesc(date) .. "%s*$") then
-          day_line = i
-          break
-        end
-      end
-      if not day_line then
-        return fail("No section for " .. date .. " in this file")
-      end
-
-      local todo_line = child_heading(lines, day_line, "^%*%*%*%s*%b()%s*TODO%s*$")
-      if not todo_line then
-        return fail("No TODO list under " .. date)
-      end
-
       local item_end = block_end(lines, item_start, 3)
       local block = vim.list_slice(lines, item_start, item_end)
       local text, checkbox = heading_text(block[1])
@@ -118,7 +151,34 @@
         block[i] = block[i]:gsub("^(%*+)%s", "%1* ")
       end
 
-      move_block(buf, item_start, item_end, todo_line, block)
+      local todo_line, day_line = find_day_todo(lines, date)
+      if day_line then
+        if not todo_line then
+          return fail("No TODO list under " .. date)
+        end
+        return move_block(buf, item_start, item_end, todo_line, block)
+      end
+
+      local target, path = month_buffer(buf, date)
+      if not target then
+        return
+      end
+      if target == buf then
+        return fail("No section for " .. date .. " in " .. vim.fn.fnamemodify(path, ":t"))
+      end
+
+      local target_todo = find_day_todo(vim.api.nvim_buf_get_lines(target, 0, -1, false), date)
+      if not target_todo then
+        return fail(("No TODO list for %s in %s"):format(date, vim.fn.fnamemodify(path, ":t")))
+      end
+
+      -- Insert before cutting, so a failure above never loses the item.
+      vim.api.nvim_buf_set_lines(target, target_todo, target_todo, false, block)
+      vim.api.nvim_buf_call(target, function()
+        vim.cmd("silent write")
+      end)
+      vim.api.nvim_buf_set_lines(buf, item_start - 1, item_end, false, {})
+      vim.notify(("Scheduled for %s in %s"):format(date, vim.fn.fnamemodify(path, ":t")))
     end
 
     function M.inbox_to_today()
