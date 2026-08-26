@@ -90,7 +90,9 @@
           pkgs = import inputs.nixpkgs {
             inherit system;
             overlays = [
-              neorg-overlay.overlays.default
+              # The upstream overlay reads `final.system`, a deprecated nixpkgs
+              # alias that warns on every evaluation; hand it the system directly.
+              (final: prev: neorg-overlay.overlays.default (final // { inherit system; }) prev)
               # core.tempus builds `valid_months` / `valid_weekdays` keyed by
               # name, then reads index [1], which is always nil -- so parse_date
               # throws on any date containing a month or weekday name, e.g.
