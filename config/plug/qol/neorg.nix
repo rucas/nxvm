@@ -67,7 +67,8 @@
     end
 
     -- Cut `first..last` and re-insert `block` directly below `anchor`, which
-    -- is a line number from before the cut.
+    -- is a line number from before the cut. Returns the line the block landed
+    -- on, so a caller can keep acting on it.
     local function move_block(buf, first, last, anchor, block)
       vim.api.nvim_buf_set_lines(buf, first - 1, last, false, {})
       local insert_at = anchor > last and (anchor - (last - first + 1)) or anchor
@@ -76,6 +77,7 @@
       if win ~= -1 then
         vim.api.nvim_win_set_cursor(win, { insert_at + 1, 0 })
       end
+      return insert_at + 1
     end
 
     -- Line of the "*** ( ) TODO" under the "** <DAY> <date>" section, plus the
@@ -133,6 +135,9 @@
     --
     -- buf and row are explicit because the calendar picker resolves them
     -- before opening, then acts on them asynchronously.
+    --
+    -- Returns the buffer and line the task landed on (which is not the source
+    -- buffer when the date crossed into another month), or nil on failure.
     local function inbox_item_to_date(buf, row, date)
       local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
 
@@ -156,7 +161,7 @@
         if not todo_line then
           return fail("No TODO list under " .. date)
         end
-        return move_block(buf, item_start, item_end, todo_line, block)
+        return buf, move_block(buf, item_start, item_end, todo_line, block)
       end
 
       local target, path = month_buffer(buf, date)
@@ -179,6 +184,7 @@
       end)
       vim.api.nvim_buf_set_lines(buf, item_start - 1, item_end, false, {})
       vim.notify(("Scheduled for %s in %s"):format(date, vim.fn.fnamemodify(path, ":t")))
+      return target, target_todo + 1
     end
 
     function M.inbox_to_today()
@@ -251,6 +257,100 @@
       end
 
       move_block(buf, task_start, task_end, inbox_line, block)
+    end
+
+    local CLAUDE_READY_TIMEOUT_MS = 15000
+    local CLAUDE_POLL_MS = 200
+
+    -- send_to_terminal needs a live pane and does not open one itself. An
+    -- already-open pane is sitting at a prompt, so it takes the text straight
+    -- away; a cold start has to boot Claude first, and its IDE websocket
+    -- handshake is the only readiness signal on offer, so poll for that rather
+    -- than writing into a terminal that will drop the bytes.
+    local function send_to_claude(text)
+      local ok, terminal = pcall(require, "claudecode.terminal")
+      if not ok then
+        return fail("claudecode.nvim is not loaded")
+      end
+
+      if terminal.get_active_terminal_bufnr() then
+        terminal.send_to_terminal(text, { focus = true })
+        return
+      end
+
+      terminal.ensure_visible()
+
+      local claudecode = require("claudecode")
+      local waited = 0
+      local function poll()
+        if claudecode.is_claude_connected() and terminal.get_active_terminal_bufnr() then
+          terminal.send_to_terminal(text, { focus = true })
+        elseif waited >= CLAUDE_READY_TIMEOUT_MS then
+          fail("Claude did not come up in time; the task was not sent")
+        else
+          waited = waited + CLAUDE_POLL_MS
+          vim.defer_fn(poll, CLAUDE_POLL_MS)
+        end
+      end
+      vim.defer_fn(poll, CLAUDE_POLL_MS)
+    end
+
+    -- Hand the "**** ( ) task" under the cursor to the ledger's /execute-task
+    -- skill, which gives it a worktree and a tmux session of its own. The whole
+    -- task block travels as the brief, so the new session gets the jira:/pr:
+    -- lines along with the header, and the local marker moves to (-) because
+    -- handing it off is the point at which the work starts.
+    --
+    -- A "*** item" in a week's INBOX is scheduled onto today on the way, for
+    -- the same reason: an agent is working it, so it is no longer a capture.
+    function M.execute_task()
+      local buf = vim.api.nvim_get_current_buf()
+      local row = vim.api.nvim_win_get_cursor(0)[1]
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+
+      local item_start = owning_heading(lines, row, 3)
+      local inbox = item_start and owning_heading(lines, item_start - 1, 2)
+      if inbox and lines[inbox]:match("^%*%*%s+INBOX%s*$") then
+        buf, row = inbox_item_to_date(buf, row, os.date("%Y-%m-%d"))
+        if not buf then
+          return
+        end
+        lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+      end
+
+      local task_start = owning_heading(lines, row, 4)
+      local todo_line = task_start and owning_heading(lines, task_start - 1, 3)
+      if not todo_line or not lines[todo_line]:match("^%*%*%*%s*%b()%s*TODO%s*$") then
+        return fail("Cursor is not on a TODO task or an INBOX item")
+      end
+
+      local stars, checkbox, text = lines[task_start]:match("^(%*+)%s*(%b())%s*(.*)$")
+      if not checkbox or text == "" then
+        return fail("Task has no description to execute")
+      end
+
+      -- Only the status char moves; any |-separated priority or timestamp
+      -- extension inside the checkbox is preserved.
+      local in_progress = stars .. " (-" .. checkbox:sub(3, -2) .. ") " .. text
+      vim.api.nvim_buf_set_lines(buf, task_start - 1, task_start, false, { in_progress })
+
+      -- inbox_item_to_date already wrote the target when the item crossed into
+      -- another month's file, so the marker has to be written after it.
+      if buf ~= vim.api.nvim_get_current_buf() then
+        vim.api.nvim_buf_call(buf, function()
+          vim.cmd("silent write")
+        end)
+      end
+
+      local block = vim.list_slice(lines, task_start, block_end(lines, task_start, 4))
+      block[1] = in_progress
+      -- block_end runs to the end of the file when nothing follows the task, so
+      -- the trailing blank lines of the day would otherwise ride along.
+      while #block > 1 and block[#block]:match("^%s*$") do
+        table.remove(block)
+      end
+
+      send_to_claude("/execute-task " .. table.concat(block, "\n"))
     end
 
     return M
