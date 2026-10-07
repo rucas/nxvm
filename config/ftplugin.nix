@@ -696,7 +696,7 @@ in
         map("is", ledger.inbox_to_picked_date, "Schedule INBOX item (calendar)")
         map("ib", ledger.task_to_inbox, "Move task back to this week's INBOX")
 
-        map("x", ledger.execute_task, "Execute task (or INBOX item) in a Claude worktree session")
+        map("x", ledger.execute_task, "Execute task/ticket (or INBOX item) in a Claude worktree session")
 
         -- which-key installs its <Space> trigger before FileType norg fires,
         -- so neorg's mapcheck() guard reports a conflict and silently skips

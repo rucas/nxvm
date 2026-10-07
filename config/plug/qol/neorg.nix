@@ -295,11 +295,13 @@
       vim.defer_fn(poll, CLAUDE_POLL_MS)
     end
 
-    -- Hand the "**** ( ) task" under the cursor to the ledger's /execute-task
-    -- skill, which gives it a worktree and a tmux session of its own. The whole
-    -- task block travels as the brief, so the new session gets the jira:/pr:
-    -- lines along with the header, and the local marker moves to (-) because
-    -- handing it off is the point at which the work starts.
+    -- Hand the "**** ( ) task" under the cursor to the global /execute-task
+    -- skill (installed by home-manager from derpfiles), which gives it a
+    -- worktree and a tmux session of its own. The whole task block travels as
+    -- the brief, so the new session gets the jira:/pr: lines along with the
+    -- header -- a jira: line is what makes the handoff pick up the ticket and
+    -- its plan rather than treating the task as bare prose. The local marker
+    -- moves to (-) because handing it off is the point at which the work starts.
     --
     -- A "*** item" in a week's INBOX is scheduled onto today on the way, for
     -- the same reason: an agent is working it, so it is no longer a capture.
