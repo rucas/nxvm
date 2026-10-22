@@ -15,6 +15,9 @@ in
     '';
     "ftplugin/norg.lua".text = ''
       vim.opt_local.textwidth = 120
+      -- Without this the cursor line unconceals, so every line the cursor
+      -- touches expands its link targets back to raw URLs and jumps width.
+      vim.opt_local.concealcursor = "nc"
       vim.opt_local.foldenable = true
       vim.schedule(function()
         vim.opt_local.foldlevel = 0
