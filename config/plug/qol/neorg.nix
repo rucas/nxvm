@@ -386,6 +386,121 @@
       end
     end
 
+    -- `checktime` reloads a ledger file whenever Claude or `ldgr` rewrites it
+    -- underneath us, and a reload fires `on_reload` rather than `on_lines`.
+    -- core.concealer only listens for `on_lines`, so it marks nothing dirty:
+    -- its icon extmarks stay on the rows they were placed on while the text
+    -- shifts under them, and its prettify flags still claim those rows are
+    -- rendered, so no later scroll or edit repairs them. Toggling the
+    -- concealer is the only public lever that marks every line dirty again.
+    --
+    -- The toggle clears every icon and re-renders only the range the window
+    -- reports as visible, which during a reload is still the whole buffer --
+    -- so repairing from the reload itself fixes the whole file. A buffer
+    -- reloaded while it had no window is past that point by the time one
+    -- appears: the toggle would then clear the file and re-render one screen,
+    -- and nothing re-renders the rest, since flagging a heading node flags
+    -- the whole section it spans. That case is left with its stale icons.
+    -- A reload also throws away the fold state: expr folds are recomputed, so
+    -- a week or day the user had opened comes back shut. The headings are
+    -- remembered by text rather than line number, because the rewrite that
+    -- triggered the reload is exactly what shifts those lines.
+    local saved_folds = {}
+
+    local function save_folds(bufnr)
+      local winid = vim.fn.bufwinid(bufnr)
+      if winid < 0 or vim.api.nvim_buf_line_count(bufnr) < 2 then
+        return
+      end
+      vim.api.nvim_win_call(winid, function()
+        local closed, row = {}, 1
+        local last = vim.api.nvim_buf_line_count(bufnr)
+        while row <= last do
+          if vim.fn.foldclosed(row) == row then
+            closed[vim.api.nvim_buf_get_lines(bufnr, row - 1, row, false)[1]] = true
+            row = vim.fn.foldclosedend(row) + 1
+          else
+            row = row + 1
+          end
+        end
+        saved_folds[bufnr] = { foldlevel = vim.wo.foldlevel, closed = closed }
+      end)
+    end
+
+    local function restore_folds(bufnr)
+      local state = saved_folds[bufnr]
+      saved_folds[bufnr] = nil
+      local winid = vim.fn.bufwinid(bufnr)
+      if not state or winid < 0 then
+        return
+      end
+
+      vim.api.nvim_win_call(winid, function()
+        vim.wo.foldlevel = state.foldlevel
+        -- Open what was not shut before, rather than shutting what was, so
+        -- 'foldlevel' keeps the meaning it had. Top-down, re-testing the same
+        -- row, because opening a parent exposes children that also need it.
+        local view = vim.fn.winsaveview()
+        local row, last = 1, vim.api.nvim_buf_line_count(bufnr)
+        while row <= last do
+          if vim.fn.foldclosed(row) ~= row then
+            row = row + 1
+          elseif state.closed[vim.api.nvim_buf_get_lines(bufnr, row - 1, row, false)[1]] then
+            row = vim.fn.foldclosedend(row) + 1
+          else
+            vim.api.nvim_win_set_cursor(0, { row, 0 })
+            pcall(vim.cmd, "normal! zo")
+          end
+        end
+        vim.fn.winrestview(view)
+      end)
+    end
+
+    local function reconceal(bufnr)
+      if not vim.api.nvim_buf_is_loaded(bufnr) or vim.bo[bufnr].filetype ~= "norg" then
+        return
+      end
+
+      if vim.fn.bufwinid(bufnr) < 0 then
+        saved_folds[bufnr] = nil
+        return
+      end
+
+      -- Deferred: run inside FileChangedShellPost itself and the re-render
+      -- the second toggle schedules is dropped, leaving no icons at all.
+      vim.defer_fn(function()
+        if vim.fn.bufwinid(bufnr) < 0 then
+          return
+        end
+        vim.api.nvim_buf_call(bufnr, function()
+          vim.cmd("Neorg toggle-concealer")
+          vim.cmd("Neorg toggle-concealer")
+        end)
+        -- After the toggles: the icon pass covers whatever the window reports
+        -- as visible, and reopening folds first would shrink that back to one
+        -- screen.
+        restore_folds(bufnr)
+      end, 50)
+    end
+
+    -- The reload gives no usable "before" hook: by BufReadPre the buffer has
+    -- already been emptied, and autoread never fires FileChangedShell. So the
+    -- fold state is kept current while the user works instead. 'updatetime' is
+    -- 250ms, and walking a month's worth of lines is cheap.
+    vim.api.nvim_create_autocmd({ "CursorHold", "BufLeave" }, {
+      pattern = "*.norg",
+      callback = function(event)
+        save_folds(event.buf)
+      end,
+    })
+
+    vim.api.nvim_create_autocmd("FileChangedShellPost", {
+      pattern = "*.norg",
+      callback = function(event)
+        reconceal(event.buf)
+      end,
+    })
+
     -- ":Neorg inbox today" / ":Neorg inbox back". neorg dispatches commands as
     -- broadcast events rather than callbacks, so this has to be a real module.
     -- Scheduled because neorg.setup() runs later in this same init.
@@ -460,6 +575,9 @@
       "core.concealer" = {
         config = {
           folds = true;
+          # "auto" runs `zR` on every init, and init runs again on each reload,
+          # so a rewrite from ldgr or Claude unfolds the whole file.
+          init_open_folds = "never";
           icon_preset = "basic";
           icons = {
             heading = {
