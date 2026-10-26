@@ -6,19 +6,36 @@
       shade_terminals = false;
       open_mapping = "[[<C-\\>]]";
       on_open = ''
-        function(_)
+        function(term)
           vim.defer_fn(function()
-            local name = vim.fn.bufname("neo-tree")
-            local winnr = vim.fn.bufwinnr(name)
-
-            if winnr == -1 then
-              vim.cmd("Neotree show")
-            elseif winnr > 0 then
-              vim.cmd(winnr .. "wincmd w")
-              vim.cmd("wincmd H")
-              vim.cmd("vertical resize 40")
-              vim.cmd("wincmd p")
+            if not vim.api.nvim_win_is_valid(term.window) then
+              return
             end
+
+            -- By filetype, not by name: a name pattern of "neo-tree" also
+            -- matches an ordinary buffer such as this repo's neo-tree.nix, and
+            -- matches nothing at all when the tree has never been opened --
+            -- bufwinnr("") then resolves to the terminal's own window, which
+            -- is what used to get dragged to the far left and shrunk to 40.
+            local tree
+            for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
+              if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "neo-tree" then
+                tree = win
+                break
+              end
+            end
+
+            if not tree then
+              vim.cmd("Neotree show")
+              return
+            end
+
+            -- Pin the tree full-height on the far left so the terminal spans
+            -- only the editing area, then hand focus back to the terminal.
+            vim.api.nvim_set_current_win(tree)
+            vim.cmd("wincmd H")
+            vim.cmd("vertical resize 40")
+            vim.api.nvim_set_current_win(term.window)
           end, 50)
 
           vim.keymap.set("t", "<C-w>", function()
