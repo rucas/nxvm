@@ -207,5 +207,31 @@
         silent = true;
       };
     }
+
+    # Leader menu from inside a running terminal. <leader> cannot be mapped in
+    # terminal mode (the program needs the space) and which-key installs no
+    # trigger there, so every <leader> hotkey is swallowed by whatever is
+    # running -- invisibly so while it prints output.
+    #
+    # The show has to happen on a later tick: `stopinsert` does not leave
+    # terminal mode until this mapping returns, and which-key's key loop would
+    # otherwise run in terminal mode and feed the keys it resolves to the
+    # program instead of to Neovim.
+    {
+      mode = "t";
+      key = "<C-Space>";
+      action.__raw = ''
+        function()
+          vim.cmd("stopinsert")
+          vim.defer_fn(function()
+            require("which-key").show({ keys = "<leader>", mode = "n" })
+          end, 10)
+        end
+      '';
+      options = {
+        silent = true;
+        desc = "Leader menu";
+      };
+    }
   ];
 }
